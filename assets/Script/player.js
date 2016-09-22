@@ -26,8 +26,16 @@ cc.Class({
     },
 
 
-    // 玩家角色移动功能
+    // 玩家角色移动功能---------本方法是在当前脚本内部的update()中调用的
     Move: function (dt) {
+
+        // 播放动画吗？
+        if (!this.jumpAnimationIsPlaying) // 如果当前没在播放跳跃动画，则才可以播放行走动画
+        {
+            this.node.getComponent(cc.Animation).play('walk_player');
+        }
+
+
         if (this.targetX > this.node.x)  // 如果触点x坐标大于player节点的x坐标
         {
             this.node.scaleX = Math.abs(this.node.scaleX);  // 图片方向向右
@@ -55,21 +63,24 @@ cc.Class({
                 // this.node.runAction(action);
             }
         }
+
+        this.isMoving = false;
     },
 
 
     // ===============跳跃====================
     // touchType存放着关于操作的一切信息； GameUI所使用的玩家输入操作控制脚本实例对象
-    Jump: function (touchtype,gameui) {
+    // 本方法是由GameUI脚本组件直接调用的
+    Jump: function (touchtype, gameui) {
 
-        var forward =  touchtype.jumpforward;
+        var forward = touchtype.jumpForward;
 
         if (1 == forward) {
-            // 向左挑
+            // 向右挑
             this.node.scaleX = Math.abs(this.node.scaleX);
         }
         else if (-1 == forward) {
-            // 向右跳
+            // 向左跳
             this.node.scaleX = -Math.abs(this.node.scaleX);
         }
 
@@ -80,10 +91,10 @@ cc.Class({
 
         // 至此跳跃动画已经执行，然后调用GameUI脚本上的跳跃收尾工作逻辑
         // （将一切touchArray数组中isJumping为true的touchType对象设置为null）
-         this.gameui.Jumped(); 
+        gameui.hasJumped();
     },
 
-    Jumped: function ()  // 跳跃的收尾工作
+    Jumped: function ()  // 跳跃的收尾工作,被跳跃动画剪辑调用
     {
         this.moveAnimationIsPlaying = false;
     },
