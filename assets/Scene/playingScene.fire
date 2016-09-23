@@ -740,6 +740,7 @@
     "_enabled": true,
     "player": null,
     "touchMoveDistLimit": 50,
-    "touchStillTimeLimit": 200
+    "touchStillTimeLimit": 200,
+    "_touchTypeArray": []
   }
 ]

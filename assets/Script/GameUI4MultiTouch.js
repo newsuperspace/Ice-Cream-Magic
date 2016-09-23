@@ -1,24 +1,42 @@
 var touchType = cc.Class({
 
-    //---------------状态标记-------------
-    isInvalidation: false,  // 失效了吗？
-    index: 0,
+    properties: {
+        //---------------状态标记-------------
+        isInvalidation: false,  // 失效了吗？
+        index: 0,
 
-    // --------------当前触点所代表的操作类型-------------
-    isMoving: false,
+        // --------------当前触点所代表的操作类型-------------
+        isMoving: false,
 
-    isJumping: false,
-    jumpForward: 0,  // -1 = left; 0=no; 1=right
+        isJumping: false,
+        jumpForward: 0,  // -1 = left; 0=no; 1=right
 
-    // --------------判断当前触点执行Jump操作的数据信息---------------
-    jumpControlStartPoint: null,
-    jumpControlStartTime: 0,
-    // ---------------- 与移动操作有关的数据信息-------------------
+        // --------------判断当前触点执行Jump操作的数据信息---------------
+        jumpControlStartPoint: {
+            default: null,
+            type: cc.Vec2
+        },
 
-    touchBeginTime: 0,
-    touchCurrentTime: 0,
+        jumpControlStartTime: 0,
+        // ---------------- 与移动操作有关的数据信息-------------------
 
-    touch: null,  // cc.Touch类型
+        touchBeginTime: 0,
+        touchCurrentTime: 0,
+
+        // touch:{
+        //     default:  null,
+        //     type: cc.Touch
+        // }  // 企图直接通过保存touch对象来从中获取数据会触发Error : Invalid Native Object错误
+        // 其深层次的原因是来自cocos creator的本质JSB。
+        // 具体原因请见笔记资料
+
+        touchCurrentLocation: {
+            default: null,
+            type: cc.Vec2
+        }
+
+
+    },
 
 });
 
@@ -46,6 +64,11 @@ cc.Class({
         touchStillTimeLimit: {
             default: 200,
             type: cc.Integer
+        },
+
+        _touchTypeArray: {
+            default: [],
+            type: touchType
         }
 
     },
@@ -55,8 +78,6 @@ cc.Class({
 
         if (this.player == null)
             this.player = cc.find('Canvas/rootCanvas/foe/player');
-
-        this.touchTypeArray = [];
 
         // --------------------------玩家操控事件监听处理相关-----------------------------
 
@@ -71,18 +92,19 @@ cc.Class({
                 var ele = new touchType();
                 ele.touchBeginTime = Date.now();
                 ele.touchCurrentTime = ele.touchBeginTime;
-                ele.touch = touch;
+                ele.touchCurrentLocation = touch.getLocation();
 
-                if (self.touchTypeArray.length == 0) {
+
+                if (self._touchTypeArray.length == 0) {
                     ele.index = 1;
                 }
                 else {
 
                     let maxIndex = 0;
 
-                    for (var i = 0; i < self.touchTypeArray.length; i++) {
-                        let arrEle = self.touchTypeArray[i];
-                        if (arrEle)
+                    for (var i = 0; i < self._touchTypeArray.length; i++) {
+                        let arrEle = self._touchTypeArray[i];
+                        if (arrEle == null)
                             continue;
 
                         if (maxIndex < arrEle.index) {
@@ -93,17 +115,16 @@ cc.Class({
                     ele.index = maxIndex + 1;
                 }
 
-                self.touchTypeArray[touch.getID()] = ele;
+                self._touchTypeArray[touch.getID()] = ele;
+
                 return true; //这里必须要写 retur n true
             },
 
             onTouchesMoved: function (touches, event) {
 
                 var touch = touches[0];
-                var ele = self.touchTypeArray[touch.getID()];
-
-                ele.touch = touch;
-                //    ele.touchCurrentTime = Date.now();
+                var ele = self._touchTypeArray[touch.getID()];
+                ele.touchCurrentLocation = touch.getLocation();
 
                 var delta = touch.getDelta();
                 if (Math.abs(delta.x) > Math.abs(delta.y))  // 触点横向移动
@@ -149,35 +170,37 @@ cc.Class({
             onTouchesEnded: function (touches, event) {
 
                 var touch = touches[0];
-                var ele = self.touchTypeArray[touch.getID()];
-                ele.touch = touch;
+                var ele = self._touchTypeArray[touch.getID()];
                 ele.touchCurrentTime = Date.now();
 
                 if (ele.jumpControlStartPoint == null) {
                     // 当前触点没有发生跳跃操作的趋势，直接结束即可
-                    self.touchTypeArray[touch.getID()] = null;  // 这个触点已经没用了，其ID索引位置被值为空，当代相同ID的触点在begin事件中再次重生
+                    self._touchTypeArray[touch.getID()] = null;  // 这个触点已经没用了，其ID索引位置被值为空，当代相同ID的触点在begin事件中再次重生
                 }
                 else {
                     // 当前触点发生了跳跃操作的趋势，应该加以判断
-                    let dist = c.pDistance(ele.jumpControlStartPoint, touch.getLocation());
+                    let dist = cc.pDistance(ele.jumpControlStartPoint, touch.getLocation());
                     let time = ele.touchCurrentTime - ele.jumpControlStartTime;
 
                     if (dist > self.touchMoveDistLimit && time < self.touchStillTimeLimit) {
                         // 符合条件的跳跃操作判定
                         ele.isJumping = true;
 
-                        let forward = touch.getDelta();
-                        if (forward.x <= 0) {
-                            // 向左跳跃
+                        // -------判断跳跃的方向是向左还是向右-------
+                        var start = ele.jumpControlStartPoint;
+                        var end = touch.getLocation();
+
+                        if (start.x >= end.x) {
+                            // 向左
                             ele.jumpForward = -1;
                         }
                         else {
-                            // 向右跳跃
+                            // 向右
                             ele.jumpForward = 1;
                         }
                     }
                     else {
-                        self.touchTypeArray[touch.getID()] = null;
+                        self._touchTypeArray[touch.getID()] = null;
                     }
                 }
             },
@@ -195,65 +218,64 @@ cc.Class({
 
     //=======================================总控逻辑=======================================
 
-    // 由player节点在已经播放跳跃动画后回调，用来清空touchTypeArray中所有isJumping为true的touchType对象，放置跳跃动作重复出现
+    // 由player节点在已经播放跳跃动画后回调，用来清空_touchTypeArray中所有isJumping为true的touchType对象，放置跳跃动作重复出现
     hasJumped: function () {
-        for (var i = 0; i < this.touchTypeArray.length; i++) {
-            let ele = this.touchTypeArray[i];
+        for (var i = 0; i < this._touchTypeArray.length; i++) {
+            let ele = this._touchTypeArray[i];
             if (ele == null)
                 continue;
 
             if (ele.isJumping)
-                this.touchTypeArray[i] = null;
+                this._touchTypeArray[i] = null;
         }
     },
 
 
 
     update: function (dt) {
-    
-        if(this.touchTypeArray.length >0)
-        {
-            var minIndex = 10000;
-            var eleNum = 0;
-            
-            for(var i=0; i<this.touchTypeArray.length; i++)
+
+        var minIndex = 10000;
+        var eleNum = 0;
+
+        for (var i = 0; i < this._touchTypeArray.length; i++) {
+            let ele = this._touchTypeArray[i];
+            if (ele == null)
+                continue;
+
+            if (!ele.isMoving && !ele.isJumping)  // 如果现存的触碰点既不是移动操作也不是跳跃操作，说明该触碰点是按住的操作，应该判断时间符合最大时间阈限后就设置isMoving为true
             {
-                let ele = this.touchTypeArray[i];
-                if(ele == null)
-                    continue;
-
-                if(!ele.isMoving && !ele.isJumping)  // 如果现存的触碰点既不是移动操作也不是跳跃操作，说明该触碰点是按住的操作，应该判断时间符合最大时间阈限后就设置isMoving为true
-                {
-                    let time = Date.now() - ele.touchCurrentTime;
-                    if(time > this.touchStillTimeLimit)
-                    {
-                        ele.isMoving = true;
-                    }
-                }
-
-
-                if(ele.index < minIndex)
-                {
-                    minIndex = ele.index;
-                    eleNum = ele.touch.getID();
+                let time = Date.now() - ele.touchCurrentTime;
+                if (time > this.touchStillTimeLimit) {
+                    ele.isMoving = true;
                 }
             }
 
-            var controller = this.touchTypeArray[eleNum];
-            if(controller.isJumping)
-            {
-                // 跳跃操作逻辑
-                this.player.Jump(controller, this);
-            }
-            else if(controller.isMoving)
-            {
-                // 移动操作逻辑
-                this.player.isMoving = true;
-                this.player.targetX = controller.touch.getLocationX();
+            if (ele.index < minIndex) {
+                minIndex = ele.index;
+                eleNum = i;
             }
         }
 
+        var controller = this._touchTypeArray[eleNum];
+        if (controller) {
+            if (controller.isJumping) {
+                // 跳跃操作逻辑
+                cc.log('跳跃');
+                this.player.getComponent('player').Jump(controller, this);
+            }
+            else if (controller.isMoving) {
+                // 移动操作逻辑
+                cc.log('移动');
+                this.player.getComponent('player').isMoving = true;
 
+                var v2 = this.player.parent.convertToNodeSpaceAR(controller.touchCurrentLocation);
 
+                this.player.getComponent('player').targetX = v2.x;
+            }
+        }
+        else {
+            // 所有的touchType元素都是null，说明玩家已经扯手不再有任何控制操作，则这个时候可以终止player上的移动逻辑
+            this.player.getComponent('player').Moved();
+        }
     },
 });

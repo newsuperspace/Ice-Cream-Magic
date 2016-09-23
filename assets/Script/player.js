@@ -30,9 +30,10 @@ cc.Class({
     Move: function (dt) {
 
         // 播放动画吗？
-        if (!this.jumpAnimationIsPlaying) // 如果当前没在播放跳跃动画，则才可以播放行走动画
+        if (!this.jumpAnimationIsPlaying && !this.moveAnimationIsPlaying) // 如果当前没在播放跳跃动画，则才可以播放行走动画
         {
             this.node.getComponent(cc.Animation).play('walk_player');
+            this.moveAnimationIsPlaying = true;
         }
 
 
@@ -64,7 +65,15 @@ cc.Class({
             }
         }
 
+    },
+
+    Moved: function(){
         this.isMoving = false;
+        if(this.moveAnimationIsPlaying)
+        {
+            this.moveAnimationIsPlaying = false;
+            this.node.getComponent(cc.Animation).stop();
+        }
     },
 
 
@@ -87,6 +96,12 @@ cc.Class({
         this.jumpAnimationIsPlaying = true;
 
         var anim = this.node.getComponent(cc.Animation);
+
+        if(this.moveAnimationIsPlaying)
+        {
+            this.node.getComponent(cc.Animation).stop();
+        }  
+
         anim.play('jump_player');
 
         // 至此跳跃动画已经执行，然后调用GameUI脚本上的跳跃收尾工作逻辑
@@ -96,7 +111,7 @@ cc.Class({
 
     Jumped: function ()  // 跳跃的收尾工作,被跳跃动画剪辑调用
     {
-        this.moveAnimationIsPlaying = false;
+        this.jumpAnimationIsPlaying = false;
     },
 
 

@@ -109,7 +109,7 @@ cc.Class({
 
         //-----------------------终止player与行走有关的一切逻辑---------------------
         var anim = this.player.getComponent(cc.Animation);
-        var state = anim.getAnimationState( 'walk_player');
+        var state = anim.getAnimationState('walk_player');
         if (state.isPlaying) {
             this.player.getComponent('player').moveAnimationIsPlaying = false;
             anim.stop();
