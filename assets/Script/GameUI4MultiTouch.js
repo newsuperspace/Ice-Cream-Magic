@@ -274,7 +274,7 @@ cc.Class({
             }
         }
         else {
-            // 所有的touchType元素都是null，说明玩家已经扯手不再有任何控制操作，则这个时候可以终止player上的移动逻辑
+            // 所有的touchType元素都是null，说明玩家已经手指不再有任何控制操作，则这个时候可以终止player上的移动逻辑
             this.player.getComponent('player').Moved();
         }
     },

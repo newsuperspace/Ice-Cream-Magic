@@ -36,7 +36,6 @@ cc.Class({
             this.moveAnimationIsPlaying = true;
         }
 
-
         if (this.targetX > this.node.x)  // 如果触点x坐标大于player节点的x坐标
         {
             this.node.scaleX = Math.abs(this.node.scaleX);  // 图片方向向右
@@ -67,10 +66,10 @@ cc.Class({
 
     },
 
-    Moved: function(){
+    // 被GameUI脚本调用，因为攻击、跳跃等动作会自动停止（一次性动作）只有移动时候小碎步的动画是循环播放的，因此GameUI需要在用户停止所有触点后停止移动动画
+    Moved: function () {
         this.isMoving = false;
-        if(this.moveAnimationIsPlaying)
-        {
+        if (this.moveAnimationIsPlaying) {
             this.moveAnimationIsPlaying = false;
             this.node.getComponent(cc.Animation).stop();
         }
@@ -97,10 +96,10 @@ cc.Class({
 
         var anim = this.node.getComponent(cc.Animation);
 
-        if(this.moveAnimationIsPlaying)
-        {
+        if (this.moveAnimationIsPlaying) {
             this.node.getComponent(cc.Animation).stop();
-        }  
+            this.moveAnimationIsPlaying = false;
+        }
 
         anim.play('jump_player');
 
