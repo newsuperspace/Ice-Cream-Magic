@@ -233,8 +233,8 @@
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
-      "x": 0.5,
-      "y": 0.5
+      "x": 0,
+      "y": 0
     },
     "_contentSize": {
       "__type__": "cc.Size",
@@ -248,8 +248,8 @@
     "_scaleY": 6,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": -23,
-      "y": -70
+      "x": -480,
+      "y": -200
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -295,7 +295,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "ground",
+    "_name": "ground01",
     "_objFlags": 0,
     "_opacity": 255,
     "_color": {
@@ -311,12 +311,12 @@
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
-      "x": 0.5,
-      "y": 0.5
+      "x": 0,
+      "y": 0
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 10415,
+      "width": 15360,
       "height": 235
     },
     "_children": [],
@@ -326,8 +326,8 @@
     "_scaleY": 0.5,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": -17,
-      "y": -258
+      "x": -480,
+      "y": -320
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -480,8 +480,8 @@
     "_scaleY": 0.5,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": -406,
-      "y": -200
+      "x": -300,
+      "y": -202
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -628,6 +628,9 @@
       },
       {
         "__id__": 18
+      },
+      {
+        "__id__": 19
       }
     ],
     "_prefab": null,
@@ -666,5 +669,18 @@
     "touchMoveDistLimit": 50,
     "touchStillTimeLimit": 200,
     "_touchTypeArray": []
+  },
+  {
+    "__type__": "6d109JsZs1KtKWS5QSK4XUk",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 16
+    },
+    "_enabled": true,
+    "player": null,
+    "ground01": null,
+    "ground02": null,
+    "mountain": null
   }
 ]

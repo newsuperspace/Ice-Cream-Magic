@@ -1,23 +1,26 @@
 var touchType = require('GameUI4MultiTouch');
 
+var EnumType = require('enum');
+
+
 cc.Class({
     extends: cc.Component,
 
     properties: {
 
         playerSpeed: {
-            default: 50,
+            default: 50,   // 默认 50像素/秒
             type: cc.Integer
         },
-
-
 
     },
 
     // use this for initialization
     onLoad: function () {
-        this.isMoving = false;
-        this.targetX = 0;
+        this.isMoving = false;   // flag标志，告诉update是否应该根据targetX来变更player的位置坐标
+        this.targetX = 0;   // player的移动目标位置的X坐标。
+
+        this.moveType = EnumType.MoveType.walk;  // 默认初始化的player的行走方式是走动
 
         // 这个动画属性很关键，用来告诉GameUI那边的Update()方法不用重复播放行走的动画了，不然人物在
         // 绘制每一帧画面的时候都会重头播放行走动画，等同于人物动作不改变（永远从动画的第一个关键帧开始，不会有变化）
@@ -36,31 +39,92 @@ cc.Class({
             this.moveAnimationIsPlaying = true;
         }
 
+        // -----------------------------行走的运动逻辑-----------------------------------
+
+        if (this.moveType === EnumType.MoveType.walk) {
+
+            if (this.targetX > this.node.x)  // 如果触点x坐标大于player节点的x坐标
+            {
+                this.node.scaleX = Math.abs(this.node.scaleX);  // 图片方向向右
+
+                var distance = dt * this.playerSpeed;
+
+                if ((this.node.x + distance) >= -(cc.director.getVisibleSize().width/2*0.3)) {
+                    // 看人物有没有超过-140的坐标点（以标准屏幕 960×480为标准屏幕，且父节点锚点为0.5,0.5）
+                    this.node.x = -(cc.director.getVisibleSize().width/2*0.3);
+                }
+                else {
+                    if ((this.node.x + distance) >= this.targetX) {
+                        this.node.x = this.targetX;
+                    }
+                    else {
+                        this.node.x += distance;
+                    }
+                }
+
+            } else {  // 触点的X坐标小于player节点的x坐标
+
+                this.node.scaleX = -Math.abs(this.node.scaleX); // 图片方向向左
+
+                var distance = dt * this.playerSpeed;
+
+                if ((this.node.x - distance) <= -(cc.director.getVisibleSize().width / 2)) {
+                    // 看人物有没有超出屏幕的可见范围
+                    this.node.x = -(cc.director.getVisibleSize().width / 2);
+                }
+                else {
+                    if ((this.node.x - distance) <= this.targetX) {
+                        this.node.x = this.targetX;
+                    }
+                    else {
+                        this.node.x -= distance;
+                    }
+                }
+            }
+
+
+
+
+            return;
+        }
+
+        // ------------------------------战斗的运动逻辑-----------------------------------
         if (this.targetX > this.node.x)  // 如果触点x坐标大于player节点的x坐标
         {
             this.node.scaleX = Math.abs(this.node.scaleX);  // 图片方向向右
 
             var distance = dt * this.playerSpeed;
-            if ((this.node.x + distance) >= this.targetX) {
-                this.node.x = this.targetX;
+
+            if ((this.node.x + distance) >= (cc.director.getVisibleSize().width / 2)) {
+                // 看人物有没有超出屏幕的可见范围
+                this.node.x = cc.director.getVisibleSize().width / 2;
             }
             else {
-                this.node.x += distance;
+                if ((this.node.x + distance) >= this.targetX) {
+                    this.node.x = this.targetX;
+                }
+                else {
+                    this.node.x += distance;
+                }
             }
+
         } else {  // 触点的X坐标小于player节点的x坐标
 
             this.node.scaleX = -Math.abs(this.node.scaleX); // 图片方向向左
 
             var distance = dt * this.playerSpeed;
-            if ((this.node.x - distance) <= this.targetX) {
-                this.node.x = this.targetX;
-                // var action =  cc.moveTo(dt,cc.p(this.targetX,this.node.y));
-                // this.node.runAction(action);
+
+            if ((this.node.x - distance) <= -(cc.director.getVisibleSize().width / 2)) {
+                // 看人物有没有超出屏幕的可见范围
+                this.node.x = -(cc.director.getVisibleSize().width / 2);
             }
             else {
-                this.node.x -= distance;
-                // var action = cc.moveBy(dt,cc.p(-distance,0));
-                // this.node.runAction(action);
+                if ((this.node.x - distance) <= this.targetX) {
+                    this.node.x = this.targetX;
+                }
+                else {
+                    this.node.x -= distance;
+                }
             }
         }
 
@@ -80,6 +144,11 @@ cc.Class({
     // touchType存放着关于操作的一切信息； GameUI所使用的玩家输入操作控制脚本实例对象
     // 本方法是由GameUI脚本组件直接调用的
     Jump: function (touchtype, gameui) {
+
+        if (this.jumpAnimationIsPlaying) {
+            // 防止重复执行跳跃动画，当跳跃动画当前正在播放（跳跃动作还没完成）的时候不重复出现跳跃动作
+            return;
+        }
 
         var forward = touchtype.jumpForward;
 
