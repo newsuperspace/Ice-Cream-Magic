@@ -13,8 +13,8 @@ var touchType = cc.Class({
 
         // --------------判断当前触点执行Jump操作的数据信息---------------
         jumpControlStartPoint: {
-            default: null,
-            type: cc.Vec2
+            default: new cc.Vec2(),
+            // type: cc.Vec2
         },
 
         jumpControlStartTime: 0,
@@ -31,8 +31,8 @@ var touchType = cc.Class({
         // 具体原因请见笔记资料
 
         touchCurrentLocation: {
-            default: null,
-            type: cc.Vec2
+            default: new cc.Vec2(),
+            // type: cc.Vec2
         }
 
 
@@ -68,7 +68,8 @@ cc.Class({
 
         _touchTypeArray: {
             default: [],
-            type: touchType
+            type: touchType,
+            serializable: false   // 不序列化当前属性
         }
 
     },
