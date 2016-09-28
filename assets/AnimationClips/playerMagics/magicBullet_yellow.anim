@@ -1,0 +1,43 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "magicBullet_yellow",
+  "_objFlags": 0,
+  "_rawFiles": null,
+  "_duration": 0.4,
+  "sample": 10,
+  "speed": 1,
+  "wrapMode": 1,
+  "curveData": {
+    "comps": {
+      "cc.Sprite": {
+        "spriteFrame": [
+          {
+            "frame": 0,
+            "value": {
+              "__uuid__": "715d5c07-b5d2-4f03-9184-cac4bee3ec1d"
+            }
+          },
+          {
+            "frame": 0.1,
+            "value": {
+              "__uuid__": "6ce8ea52-e3e4-4085-8620-6af4f8a48381"
+            }
+          },
+          {
+            "frame": 0.2,
+            "value": {
+              "__uuid__": "cb1bd620-33af-413d-85c2-0a15f9528610"
+            }
+          },
+          {
+            "frame": 0.3,
+            "value": {
+              "__uuid__": "808329cc-4897-4e2e-a38b-2e2ce58cf63e"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "events": []
+}

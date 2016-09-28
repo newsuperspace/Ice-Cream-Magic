@@ -1,0 +1,43 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "magicBullet_green",
+  "_objFlags": 0,
+  "_rawFiles": null,
+  "_duration": 0.4,
+  "sample": 10,
+  "speed": 1,
+  "wrapMode": 1,
+  "curveData": {
+    "comps": {
+      "cc.Sprite": {
+        "spriteFrame": [
+          {
+            "frame": 0,
+            "value": {
+              "__uuid__": "9e088227-eabf-475a-b907-4e7515748c0a"
+            }
+          },
+          {
+            "frame": 0.1,
+            "value": {
+              "__uuid__": "be3330a1-2892-49e4-90bd-cf933a5548df"
+            }
+          },
+          {
+            "frame": 0.2,
+            "value": {
+              "__uuid__": "effe72a1-667c-4e9d-b8d8-47a313752168"
+            }
+          },
+          {
+            "frame": 0.3,
+            "value": {
+              "__uuid__": "ef8e9b0d-987b-4827-bee8-44a49168bedc"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "events": []
+}

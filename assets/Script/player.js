@@ -1,7 +1,8 @@
 var touchType = require('GameUI4MultiTouch');
-
+ 
 var EnumType = require('enum');
 
+var NodePool = require('NodePool');
 
 cc.Class({
     extends: cc.Component,
@@ -12,6 +13,25 @@ cc.Class({
             default: 50,   // 默认 50像素/秒
             type: cc.Integer
         },
+
+
+        // ----------------------各个技能的CD时间-------------------------
+        magicBulletCD: {
+            default: 0.3,  // 300毫秒 == 0.3秒
+            type: cc.Integer
+        },
+
+        magicGou: {
+            default: 4, // 4秒 == 4000毫秒
+            type: cc.Integer
+        },
+
+        magicFall: {
+            default: 5,   // 5秒 == 5000毫秒
+            type: cc.Integer
+        },
+
+
 
     },
 
@@ -29,6 +49,7 @@ cc.Class({
     },
 
 
+    // =====================================移动========================================
     // 玩家角色移动功能---------本方法是在当前脚本内部的update()中调用的
     Move: function (dt) {
 
@@ -81,10 +102,6 @@ cc.Class({
                     }
                 }
             }
-
-
-
-
             return;
         }
 
@@ -139,8 +156,9 @@ cc.Class({
         }
     },
 
+    
 
-    // ===============跳跃====================
+    // =====================================跳跃========================================
     // touchType存放着关于操作的一切信息； GameUI所使用的玩家输入操作控制脚本实例对象
     // 本方法是由GameUI脚本组件直接调用的
     Jump: function (touchtype, gameui) {
@@ -183,17 +201,28 @@ cc.Class({
     },
 
 
+    // =====================================射蛋========================================
+    // 射击魔法飞弹————射出去后不管
+    shooting: function(position){
 
-    // =========================帧绘制任务功能==========================
+       var manager =  this.node.getComponent('PoolManager');
+       var node = manager.requestNode(EnumType.playerMagicType.bullet);
+
+       // 飞弹节点所属坐标系（父节点）已经在NodePool内设置好了
+       // 现在只要设置起始的位置坐标就行了
+       node.confirmFlyForward(position);   
+    },
+
+
+    // ==================================帧绘制任务功能==================================
     update: function (dt) {
 
         // 移动
         if (this.isMoving)
             this.Move(dt);
 
-        // 普通攻击
+        // 射击飞弹？
 
-        // 施法
 
     },
 });

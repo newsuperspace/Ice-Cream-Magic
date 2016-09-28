@@ -24,10 +24,35 @@ cc.Class({
             default: null,
             type: cc.Node
         },
+
+        // -----------------下面三个属性与碰撞检测相关--------------------
+        openCollision:{        // 是否开启碰撞检测功能
+            default: true,
+        },
+        openCollisionDebug:{   // 是否开启碰撞检测的debug绘制
+            default: false,
+        },
+        showBoundingBox:{
+            default: false
+        }
     },
 
     // use this for initialization
     onLoad: function () {
+
+        // -----------------------------------碰撞检测相关---------------------------------------
+        var manager = cc.director.getCollisionManager();
+
+        if(manager.enabled != this.openCollision)
+            manager.enabled = this.openCollision;
+        
+        if(manager.enabledDebugDraw != this.openCollisionDebug)
+            manager.enabledDebugDraw = this.openCollisionDebug;
+
+        if(manager.enabledDrawBoundingBox != this.showBoundingBox)
+            manager.enabledDrawBoundingBox = this.showBoundingBox;
+
+        // ---------------------------------初始化引用属性，引用外部节点对象--------------------------------
         if (this.player == null) {
             this.player = cc.find('Canvas/rootCanvas/foe/player');
         }
@@ -44,14 +69,11 @@ cc.Class({
             this.mountain = cc.find('Canvas/rootCanvas/background/mountain');
         }
 
-        //-----------------------构建两张地面图片接续--------------------------
+        //-------------------------------构建两张地面图片接续-------------------------------
         var x = this.groundBefore.x + this.groundBefore.width * this.groundBefore.scaleX;   //得到接续的X坐标
         var y = this.groundBefore.y   //得到接续的Y坐标
         this.groundAfter.x = x;
         this.groundAfter.y = y;
-
-        cc.log('groundAfter的坐标：'+x+','+y);
-
 
         this.scrolledDistance = 0;  // 记录已卷动的距离
 
@@ -62,7 +84,7 @@ cc.Class({
 
     },
 
-    // 滚动
+    // 滚动地面的逻辑
     scroll: function (dt) {
 
         var playerScript = this.player.getComponent('player');
@@ -88,10 +110,6 @@ cc.Class({
         }
 
     },
-
-
-
-
 
 
     // 同步player组件中的moveType属性和当前脚本的moveType属性相一致
@@ -137,6 +155,8 @@ cc.Class({
             this.scroll(dt); // 卷动
         }
 
+
+        
 
     },
 });

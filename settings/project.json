@@ -1,12 +1,36 @@
 {
   "collision-matrix": [
     [
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
       true
+    ],
+    [
+      false,
+      false,
+      false,
+      true
+    ],
+    [
+      false,
+      true,
+      true,
+      false
     ]
   ],
   "excluded-modules": [],
   "group-list": [
-    "default"
+    "default",
+    "playerMagic",
+    "player",
+    "foe"
   ],
   "start-scene": "current"
 }
