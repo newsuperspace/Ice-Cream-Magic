@@ -1,5 +1,5 @@
 var touchType = require('GameUI4MultiTouch');
- 
+
 var EnumType = require('enum');
 
 var NodePool = require('NodePool');
@@ -17,21 +17,19 @@ cc.Class({
 
         // ----------------------各个技能的CD时间-------------------------
         magicBulletCD: {
-            default: 300,  // 300毫秒 == 0.3秒
+            default: 300,  // 300毫秒
             type: cc.Integer
         },
 
         magicGouCD: {
-            default: 4000, // 4秒 == 4000毫秒
+            default: 4000, // 4000毫秒
             type: cc.Integer
         },
 
         magicFallCD: {
-            default: 5000,   // 5秒 == 5000毫秒
+            default: 5000,   // 5000毫秒
             type: cc.Integer
         },
-
-
 
     },
 
@@ -43,9 +41,9 @@ cc.Class({
 
 
         // 记录三个技能最后一次释放的
-        this.magicBulletPrepareTime = 0;
-        this.magicGouPrepareTime =  0;
-        this.magicFallPrepareTime = 0;
+        this.magicBulletPrepareTime = this.magicBulletCD;
+        this.magicGouPrepareTime = this.magicGouCD;
+        this.magicFallPrepareTime = this.magicFallCD;
 
         this.isMoving = false;   // flag标志，告诉update是否应该根据targetX来变更player的位置坐标
         this.targetX = 0;   // player的移动目标位置的X坐标。
@@ -80,9 +78,9 @@ cc.Class({
 
                 var distance = dt * this.playerSpeed;
 
-                if ((this.node.x + distance) >= -(cc.director.getVisibleSize().width/2*0.3)) {
+                if ((this.node.x + distance) >= -(cc.director.getVisibleSize().width / 2 * 0.3)) {
                     // 看人物有没有超过-140的坐标点（以标准屏幕 960×480为标准屏幕，且父节点锚点为0.5,0.5）
-                    this.node.x = -(cc.director.getVisibleSize().width/2*0.3);
+                    this.node.x = -(cc.director.getVisibleSize().width / 2 * 0.3);
                 }
                 else {
                     if ((this.node.x + distance) >= this.targetX) {
@@ -166,7 +164,7 @@ cc.Class({
         }
     },
 
-    
+
 
     // =====================================跳跃========================================
     // touchType存放着关于操作的一切信息； GameUI所使用的玩家输入操作控制脚本实例对象
@@ -213,70 +211,67 @@ cc.Class({
 
     // =====================================射蛋========================================
     // 射击魔法飞弹————射出去后不管
-    shooting: function(position){
+    shooting: function (position) {
 
-        if(this.magicBulletPrepareTime != this.magicBulletCD)
-        {
+        if (this.magicBulletPrepareTime != this.magicBulletCD) {
             // 如果冷却时间累计不足规定技能CD时间，则直接退出
             return;
         }
 
-       var manager =  this.node.getComponent('PoolManager');
-       var node = manager.requestNode(EnumType.playerMagicType.bullet);
+        var manager = this.node.getComponent('PoolManager');
+        var node = manager.requestNode(EnumType.playerMagicType.bullet);
 
-       // 发射飞弹的时候player人物要朝向敌人的方向
-       if(position.x > this.node.x){
+        // 发射飞弹的时候player人物要朝向敌人的方向
+        if (position.x > this.node.x) {
             this.node.scaleX = Math.abs(this.node.scaleX);  // 人物图片脸部向右
-       }
-       else{
-           this.node.scaleX = -Math.abs(this.node.scaleX); //  人物图片脸部向左
-       }
+        }
+        else {
+            this.node.scaleX = -Math.abs(this.node.scaleX); //  人物图片脸部向左
+        }
 
-       // 飞弹节点所属坐标系（父节点）已经在NodePool内设置好了
-       // 现在只要设置起始的位置坐标就行了
-       node.getComponent('magicBullet').confirmFlyForward(position);
+        // 飞弹节点所属坐标系（父节点）已经在NodePool内设置好了
+        // 现在只要设置起始的位置坐标就行了
+        node.getComponent('magicBullet').confirmFlyForward(position);
 
-       // 技能释放完成后，清空冷却事件累计变量为0
-       this.magicBulletPrepareTime = 0;
+        // 技能释放完成后，清空冷却事件累计变量为0
+        this.magicBulletPrepareTime = 0;
     },
 
 
     // ==================================帧绘制任务功能==================================
-    update: function (dt) {
+    update: function (dt) {    // 记住cocos中使用的时间单位是秒，而不是其他语言和IDE中通常使用的毫秒
 
         // 移动
         if (this.isMoving)
             this.Move(dt);
 
         //----------------------------- 技能冷却时间流逝-------------------------------
-        if(this.magicBulletPrepareTime < this.magicBulletCD)  // 如果飞弹技能的冷却累计时间没有达到规定的CD事件，则
+        if (this.magicBulletPrepareTime < this.magicBulletCD)  // 如果飞弹技能的冷却累计时间没有达到规定的CD事件，则
         {
             // 将距离上一帧的时间流逝累加到冷却时间累计变量上
-            this.magicBulletPrepareTime += dt;
-            if(this.magicBulletPrepareTime > this.magicBulletCD)
-            {
+            this.magicBulletPrepareTime += dt * 1000;     // 转秒为毫秒
+            if (this.magicBulletPrepareTime > this.magicBulletCD) {
                 // 如果超过了规定的CD时间，则说明技能已经准备好，将累计变量更改为CD上限就说明可以发动技能了
                 this.magicBulletPrepareTime = this.magicBulletCD;
             }
+            cc.log('技能冷却时间累计:' + this.magicBulletPrepareTime);
         }
 
-        if(this.magicGouPrepareTime < this.magicGouCD)  // 如果飞弹技能的冷却累计时间没有达到规定的CD事件，则
+        if (this.magicGouPrepareTime < this.magicGouCD)  // 如果飞弹技能的冷却累计时间没有达到规定的CD事件，则
         {
             // 将距离上一帧的时间流逝累加到冷却时间累计变量上
-            this.magicGouPrepareTime += dt;
-            if(this.magicGouPrepareTime > this.magicGouCD)
-            {
+            this.magicGouPrepareTime += dt*1000;   // 转秒为毫秒
+            if (this.magicGouPrepareTime > this.magicGouCD) {
                 // 如果超过了规定的CD时间，则说明技能已经准备好，将累计变量更改为CD上限就说明可以发动技能了
                 this.magicGouPrepareTime = this.magicGouCD;
             }
         }
 
-        if(this.magicFallPrepareTime < this.magicFallCD)  // 如果飞弹技能的冷却累计时间没有达到规定的CD事件，则
+        if (this.magicFallPrepareTime < this.magicFallCD)  // 如果飞弹技能的冷却累计时间没有达到规定的CD事件，则
         {
             // 将距离上一帧的时间流逝累加到冷却时间累计变量上
-            this.magicFallPrepareTime += dt;
-            if(this.magicFallPrepareTime > this.magicFallCD)
-            {
+            this.magicFallPrepareTime += dt;       // 转秒为毫秒
+            if (this.magicFallPrepareTime > this.magicFallCD) {
                 // 如果超过了规定的CD时间，则说明技能已经准备好，将累计变量更改为CD上限就说明可以发动技能了
                 this.magicFallPrepareTime = this.magicFallCD;
             }

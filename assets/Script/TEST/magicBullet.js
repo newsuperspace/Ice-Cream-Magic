@@ -11,7 +11,7 @@ cc.Class({
         },
 
         flySpeed: {   // 魔法飞弹的飞行速度
-            default: 100,
+            default: 600,
             type: cc.Integer
         }
     },
@@ -60,13 +60,13 @@ cc.Class({
 
         if (player.scaleX > 0) {
             // 右侧出现
-            position.x += player.width / 2 + 15;
-            position.y += player.height / 2 + 10;
+            position.x += player.width / 2;
+            position.y += player.height / 4;
         }
         else {
             // 左侧出现
-            position.x -= player.width / 2 + 15;
-            position.y += player.height / 2 + 10;
+            position.x -= player.width / 2;
+            position.y += player.height / 4;
         }
 
         this.node.x = position.x;  // 重置飞弹位置
@@ -90,6 +90,8 @@ cc.Class({
 
     // 向指定目标飞行
     flying: function (dt) {
+
+        cc.log('飞行速度为:'+this.flySpeed);
 
         this.node.x += this.flyForward.x * this.flySpeed * dt;
         this.node.y += this.flyForward.y * this.flySpeed * dt;
