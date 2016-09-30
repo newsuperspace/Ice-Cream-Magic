@@ -34,8 +34,6 @@ cc.Class({
         for (let i = 0; i < this.Pools.length; ++i) {
             this.Pools[i].init();
         }
-
-
     },
 
 

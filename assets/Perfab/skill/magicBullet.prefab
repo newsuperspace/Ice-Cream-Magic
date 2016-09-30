@@ -39,8 +39,8 @@
     "_scaleY": 1.75,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": -218,
-      "y": -150
+      "x": -1624,
+      "y": -427
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -67,7 +67,7 @@
     "_prefab": {
       "__id__": 6
     },
-    "groupIndex": 0
+    "groupIndex": 1
   },
   {
     "__type__": "cc.Sprite",
@@ -149,7 +149,10 @@
     "root": {
       "__id__": 1
     },
-    "asset": null,
-    "fileId": "ef73fOg+gtNorqNLi1fprAJ"
+    "asset": {
+      "__id__": 0
+    },
+    "fileId": "42773QkjohAJJdusVhrv+vI",
+    "sync": false
   }
 ]

@@ -19,9 +19,10 @@ cc.Class({
     // use this for initialization
     onLoad: function () {
 
-        this.player = cc.find('player', this.node.parent);   // 在当前魔法飞弹节点的父节点（foe节点）上寻找player玩家角色节点
+        this.player = cc.find('Canvas/rootCanvas/foe/player');   // 查找到角色player节点对象
+        this.stopMoving = false;   // 是否停止飞弹的运动,当飞弹触碰到敌人或者障碍物的时候设置该属性为true
 
-          // 飞弹的飞行向量 —————— 通过自身的confirmFlyForward()方法计算得来
+        // 飞弹的飞行向量 —————— 通过自身的confirmFlyForward()方法计算得来
         this.flyForward = null;  // 这是一个单位向量，向量长度为1，保存着X和Y的比例信息
 
         // -------------------随机生成不同颜色的魔法飞弹所需要使用的数组信息----------------
@@ -49,21 +50,28 @@ cc.Class({
     // scaleX == 1 右侧
     // scaleX == -1 左侧
     initPosition: function () {
+                                
+        // var player = cc.find('Canvas/rootCanvas/foe/player');
+        var player = this.player;
 
-        var position = this.player.position;
+        var position = new cc.Vec2();
+        position.x = player.getPosition().x;
+        position.y = player.getPosition().y;
 
-        if (this.player.scaleX > 0) {
+        if (player.scaleX > 0) {
             // 右侧出现
-            position.x += this.player.width / 2 + 15;
-            position.y += this.player.height / 2 + 10;
+            position.x += player.width / 2 + 15;
+            position.y += player.height / 2 + 10;
         }
         else {
             // 左侧出现
-            position.x -= this.player.width / 2 + 15;
-            position.y += this.player.height / 2 + 10;
+            position.x -= player.width / 2 + 15;
+            position.y += player.height / 2 + 10;
         }
 
-        this.node.position = position;  // 重置飞弹位置
+        this.node.x = position.x;  // 重置飞弹位置
+        this.node.y = position.y;
+
         return position;
     },
 
@@ -75,10 +83,14 @@ cc.Class({
 
         var startPosition = this.initPosition();
         this.flyForward = cc.pNormalize(cc.pSub(position, startPosition));
+        
+        this.stopMoving = false;   // 不停止飞行
+        this.node.getComponent(cc.Sprite).spriteFrame = this.atlas.getSpriteFrame(this.spriteFrames[this.index]);  // 重置外观
     },
 
     // 向指定目标飞行
     flying: function (dt) {
+
         this.node.x += this.flyForward.x * this.flySpeed * dt;
         this.node.y += this.flyForward.y * this.flySpeed * dt;
     },
@@ -94,13 +106,12 @@ cc.Class({
 
     // --------------------------------------------碰撞检测回调函数-------------------------------------------------
     onCollisionEnter: function (other, self) {
-        console.log('on collision enter');
+
+        // 停止飞弹的运动
+        this.stopMoving = true;
 
         // 对于子弹来说只需要破裂消失就好了
         this.node.getComponent(cc.Animation).play(this.animNames[this.index]);   // 播放动画
-
-        // 调用回收资源的逻辑，返回当前飞弹所属于的对象池
-        this.recycle();
     },
 
     // -------------------------------------------------刷新绘制帧-------------------------------------------------
@@ -114,9 +125,8 @@ cc.Class({
         }
         else {
 
-            if(this.flyForward)
-                this.flying(); // 没超出可视范围————继续绘制飞弹的新位置
-            
+            if(!this.stopMoving && this.flyForward)
+                this.flying(dt); // 没超出可视范围————继续绘制飞弹的新位置
         }
 
     },

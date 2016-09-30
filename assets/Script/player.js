@@ -17,17 +17,17 @@ cc.Class({
 
         // ----------------------各个技能的CD时间-------------------------
         magicBulletCD: {
-            default: 0.3,  // 300毫秒 == 0.3秒
+            default: 300,  // 300毫秒 == 0.3秒
             type: cc.Integer
         },
 
-        magicGou: {
-            default: 4, // 4秒 == 4000毫秒
+        magicGouCD: {
+            default: 4000, // 4秒 == 4000毫秒
             type: cc.Integer
         },
 
-        magicFall: {
-            default: 5,   // 5秒 == 5000毫秒
+        magicFallCD: {
+            default: 5000,   // 5秒 == 5000毫秒
             type: cc.Integer
         },
 
@@ -37,6 +37,16 @@ cc.Class({
 
     // use this for initialization
     onLoad: function () {
+
+        // 初始化对象池管理器，管理器会自动批量初始化其所管理的所有对象池，为对象池中对象的存取做好准备
+        this.node.getComponent('PoolManager').init();
+
+
+        // 记录三个技能最后一次释放的
+        this.magicBulletPrepareTime = 0;
+        this.magicGouPrepareTime =  0;
+        this.magicFallPrepareTime = 0;
+
         this.isMoving = false;   // flag标志，告诉update是否应该根据targetX来变更player的位置坐标
         this.targetX = 0;   // player的移动目标位置的X坐标。
 
@@ -66,7 +76,7 @@ cc.Class({
 
             if (this.targetX > this.node.x)  // 如果触点x坐标大于player节点的x坐标
             {
-                this.node.scaleX = Math.abs(this.node.scaleX);  // 图片方向向右
+                this.node.scaleX = Math.abs(this.node.scaleX);  //  人物图片脸部向右
 
                 var distance = dt * this.playerSpeed;
 
@@ -85,7 +95,7 @@ cc.Class({
 
             } else {  // 触点的X坐标小于player节点的x坐标
 
-                this.node.scaleX = -Math.abs(this.node.scaleX); // 图片方向向左
+                this.node.scaleX = -Math.abs(this.node.scaleX); //  人物图片脸部向左
 
                 var distance = dt * this.playerSpeed;
 
@@ -205,12 +215,29 @@ cc.Class({
     // 射击魔法飞弹————射出去后不管
     shooting: function(position){
 
+        if(this.magicBulletPrepareTime != this.magicBulletCD)
+        {
+            // 如果冷却时间累计不足规定技能CD时间，则直接退出
+            return;
+        }
+
        var manager =  this.node.getComponent('PoolManager');
        var node = manager.requestNode(EnumType.playerMagicType.bullet);
 
+       // 发射飞弹的时候player人物要朝向敌人的方向
+       if(position.x > this.node.x){
+            this.node.scaleX = Math.abs(this.node.scaleX);  // 人物图片脸部向右
+       }
+       else{
+           this.node.scaleX = -Math.abs(this.node.scaleX); //  人物图片脸部向左
+       }
+
        // 飞弹节点所属坐标系（父节点）已经在NodePool内设置好了
        // 现在只要设置起始的位置坐标就行了
-       node.confirmFlyForward(position);   
+       node.getComponent('magicBullet').confirmFlyForward(position);
+
+       // 技能释放完成后，清空冷却事件累计变量为0
+       this.magicBulletPrepareTime = 0;
     },
 
 
@@ -221,7 +248,39 @@ cc.Class({
         if (this.isMoving)
             this.Move(dt);
 
-        // 射击飞弹？
+        //----------------------------- 技能冷却时间流逝-------------------------------
+        if(this.magicBulletPrepareTime < this.magicBulletCD)  // 如果飞弹技能的冷却累计时间没有达到规定的CD事件，则
+        {
+            // 将距离上一帧的时间流逝累加到冷却时间累计变量上
+            this.magicBulletPrepareTime += dt;
+            if(this.magicBulletPrepareTime > this.magicBulletCD)
+            {
+                // 如果超过了规定的CD时间，则说明技能已经准备好，将累计变量更改为CD上限就说明可以发动技能了
+                this.magicBulletPrepareTime = this.magicBulletCD;
+            }
+        }
+
+        if(this.magicGouPrepareTime < this.magicGouCD)  // 如果飞弹技能的冷却累计时间没有达到规定的CD事件，则
+        {
+            // 将距离上一帧的时间流逝累加到冷却时间累计变量上
+            this.magicGouPrepareTime += dt;
+            if(this.magicGouPrepareTime > this.magicGouCD)
+            {
+                // 如果超过了规定的CD时间，则说明技能已经准备好，将累计变量更改为CD上限就说明可以发动技能了
+                this.magicGouPrepareTime = this.magicGouCD;
+            }
+        }
+
+        if(this.magicFallPrepareTime < this.magicFallCD)  // 如果飞弹技能的冷却累计时间没有达到规定的CD事件，则
+        {
+            // 将距离上一帧的时间流逝累加到冷却时间累计变量上
+            this.magicFallPrepareTime += dt;
+            if(this.magicFallPrepareTime > this.magicFallCD)
+            {
+                // 如果超过了规定的CD时间，则说明技能已经准备好，将累计变量更改为CD上限就说明可以发动技能了
+                this.magicFallPrepareTime = this.magicFallCD;
+            }
+        }
 
 
     },

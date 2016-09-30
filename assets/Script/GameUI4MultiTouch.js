@@ -1,3 +1,12 @@
+
+// 触点开始到触点结束的间隔时间小于 touchStillTimeLimit  则可能是点击操作 也可能是 滑动操作  前者是发射魔法飞弹 后者是执行人物跳跃
+// 这两个的区分要看 触点开始 到触点结束时候 两个位置的距离 如果距离小于 touchMoveDistLimit 则是 点击操作  大于touchMoveDistLimit则是跳跃
+
+// 如果触点开始之后没有触发任何其他包括move 、 cancel、 end在内的其他事件，则经过update的时间间隔检验 如果发现距离首次begin过去的时间超过了touchStillTimeLimit
+// 则说明这是一次按住的移动操作
+
+// 如果从触点开始 到 move事件的时间间隔超过 touchStillTimeLimit 且 两次的移动距离 超过 touchMoveDistLimit 说明试一次滑动的移动操作
+
 var touchType = cc.Class({
 
     properties: {
@@ -43,7 +52,7 @@ var touchType = cc.Class({
 module.exports = touchType;
 
 
-
+var broadcast = require('broadcast');
 
 
 cc.Class({
@@ -66,6 +75,8 @@ cc.Class({
             type: cc.Integer
         },
 
+
+        // 用来存放多点触碰中的多点触碰信息类型——touchType的实例对象的Array数组容器
         _touchTypeArray: {
             default: [],
             type: touchType,
@@ -174,9 +185,18 @@ cc.Class({
                 var ele = self._touchTypeArray[touch.getID()];
                 ele.touchCurrentTime = Date.now();
 
+                // && (cc.pDistance(touch.getStartLocation(), touch.getLocation()) < this.touchMoveDistLimit)
+                if ((ele.touchCurrentTime - ele.touchBeginTime) < self.touchStillTimeLimit) {
+                    // 这是一次单纯的单击操作                             
+                    let pos = touch.getStartLocation();
+                    broadcast.addClickPoint(pos);
+                    cc.log('单击出现了！坐标'+'('+pos.x+','+pos.y+')');
+                }
+
                 if (ele.jumpControlStartPoint == null) {
                     // 当前触点没有发生跳跃操作的趋势，直接结束即可
                     self._touchTypeArray[touch.getID()] = null;  // 这个触点已经没用了，其ID索引位置被值为空，当代相同ID的触点在begin事件中再次重生
+
                 }
                 else {
                     // 当前触点发生了跳跃操作的趋势，应该加以判断
