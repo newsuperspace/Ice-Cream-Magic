@@ -1506,8 +1506,8 @@
     "ground02": null,
     "mountain": null,
     "openCollision": true,
-    "openCollisionDebug": true,
-    "showBoundingBox": true
+    "openCollisionDebug": false,
+    "showBoundingBox": false
   },
   {
     "__type__": "d1c9cAHUuBOOIIwFTTWbxpI",

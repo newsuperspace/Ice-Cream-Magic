@@ -31,6 +31,23 @@ cc.Class({
             type: cc.Integer
         },
 
+
+        // ----------------------各个技能的硬直时间-------------------------
+        bulletStiffTime: {
+            default: 150,
+            type: cc.Integer
+        },
+
+        gouStiffTime: {
+            default: 500,
+            type: cc.Integer
+        },
+
+        fallStiffTime: {
+            default: 1000,
+            type: cc.Integer
+        }
+
     },
 
     // use this for initialization
@@ -45,6 +62,13 @@ cc.Class({
         this.magicGouPrepareTime = this.magicGouCD;
         this.magicFallPrepareTime = this.magicFallCD;
 
+        // 过去的硬直时间
+        this.passedBulletStiffTime = this.bulletStiffTime;
+        this.passedGouStiffTime = this.gouStiffTime;
+        this.passedFallStiffTime = this.fallStiffTime;
+
+
+
         this.isMoving = false;   // flag标志，告诉update是否应该根据targetX来变更player的位置坐标
         this.targetX = 0;   // player的移动目标位置的X坐标。
 
@@ -57,9 +81,27 @@ cc.Class({
     },
 
 
+    // 判断当前player人物是否处于技能使用后的硬直时间
+    isStiffing: function () {
+
+        var result = false;
+
+        if (this.passedBulletStiffTime != this.bulletStiffTime || this.passedGouStiffTime != this.gouStiffTime || this.passedFallStiffTime != this.fallStiffTime) {
+            result = true;
+        }
+
+        return result;
+    },
+
+
     // =====================================移动========================================
     // 玩家角色移动功能---------本方法是在当前脚本内部的update()中调用的
     Move: function (dt) {
+
+        // 如果人物当前处于将之状态，则直接退出
+        if (this.isStiffing())
+            return;
+
 
         // 播放动画吗？
         if (!this.jumpAnimationIsPlaying && !this.moveAnimationIsPlaying) // 如果当前没在播放跳跃动画，则才可以播放行走动画
@@ -171,6 +213,10 @@ cc.Class({
     // 本方法是由GameUI脚本组件直接调用的
     Jump: function (touchtype, gameui) {
 
+        // 如果人物当前处于将之状态，则直接退出
+        if (this.isStiffing())
+            return;
+
         if (this.jumpAnimationIsPlaying) {
             // 防止重复执行跳跃动画，当跳跃动画当前正在播放（跳跃动作还没完成）的时候不重复出现跳跃动作
             return;
@@ -235,6 +281,9 @@ cc.Class({
 
         // 技能释放完成后，清空冷却事件累计变量为0
         this.magicBulletPrepareTime = 0;
+        // 硬质时间归0
+        this.passedBulletStiffTime = 0;
+
     },
 
 
@@ -260,7 +309,7 @@ cc.Class({
         if (this.magicGouPrepareTime < this.magicGouCD)  // 如果飞弹技能的冷却累计时间没有达到规定的CD事件，则
         {
             // 将距离上一帧的时间流逝累加到冷却时间累计变量上
-            this.magicGouPrepareTime += dt*1000;   // 转秒为毫秒
+            this.magicGouPrepareTime += dt * 1000;   // 转秒为毫秒
             if (this.magicGouPrepareTime > this.magicGouCD) {
                 // 如果超过了规定的CD时间，则说明技能已经准备好，将累计变量更改为CD上限就说明可以发动技能了
                 this.magicGouPrepareTime = this.magicGouCD;
@@ -270,12 +319,39 @@ cc.Class({
         if (this.magicFallPrepareTime < this.magicFallCD)  // 如果飞弹技能的冷却累计时间没有达到规定的CD事件，则
         {
             // 将距离上一帧的时间流逝累加到冷却时间累计变量上
-            this.magicFallPrepareTime += dt;       // 转秒为毫秒
+            this.magicFallPrepareTime += dt * 1000;       // 转秒为毫秒
             if (this.magicFallPrepareTime > this.magicFallCD) {
                 // 如果超过了规定的CD时间，则说明技能已经准备好，将累计变量更改为CD上限就说明可以发动技能了
                 this.magicFallPrepareTime = this.magicFallCD;
             }
         }
+
+        //----------------------------- 人物僵直时间流逝-------------------------------
+
+        if (this.passedBulletStiffTime < this.bulletStiffTime) {
+
+            this.passedBulletStiffTime += dt * 1000;
+            if (this.passedBulletStiffTime > this.bulletStiffTime) {
+                this.passedBulletStiffTime = this.bulletStiffTime;
+            }
+        }
+
+        if (this.passedGouStiffTime < this.gouStiffTime) {
+
+            this.passedGouStiffTime += dt * 1000;
+            if (this.passedGouStiffTime > this.gouStiffTime) {
+                this.passedGouStiffTime = this.gouStiffTime;
+            }
+        }
+
+        if (this.passedFallStiffTime < this.fallStiffTime) {
+
+            this.passedBulletStiffTime += dt * 1000;
+            if (this.passedFallStiffTime > this.fallStiffTime) {
+                this.passedFallStiffTime = this.fallStiffTime;
+            }
+        }
+
 
 
     },
