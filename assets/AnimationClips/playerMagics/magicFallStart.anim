@@ -1,0 +1,72 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "magicFallStart",
+  "_objFlags": 0,
+  "_rawFiles": null,
+  "_duration": 0.2,
+  "sample": 10,
+  "speed": 1,
+  "wrapMode": 2,
+  "curveData": {
+    "paths": {
+      "blue/blueBall": {
+        "props": {}
+      },
+      "blue/blueTail": {
+        "props": {
+          "rotation": [
+            {
+              "frame": 0,
+              "value": 0
+            },
+            {
+              "frame": 0.1,
+              "value": -11
+            },
+            {
+              "frame": 0.2,
+              "value": 4
+            }
+          ]
+        }
+      },
+      "green/greenTail": {
+        "props": {
+          "rotation": [
+            {
+              "frame": 0,
+              "value": 0
+            },
+            {
+              "frame": 0.1,
+              "value": -7
+            },
+            {
+              "frame": 0.2,
+              "value": 6
+            }
+          ]
+        }
+      },
+      "yellow/yellowTail": {
+        "props": {
+          "rotation": [
+            {
+              "frame": 0,
+              "value": 0
+            },
+            {
+              "frame": 0.1,
+              "value": 6
+            },
+            {
+              "frame": 0.2,
+              "value": -5
+            }
+          ]
+        }
+      }
+    }
+  },
+  "events": []
+}

@@ -1,0 +1,93 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "magicFallStill",
+  "_objFlags": 0,
+  "_rawFiles": null,
+  "_duration": 0.2,
+  "sample": 10,
+  "speed": 1,
+  "wrapMode": 2,
+  "curveData": {
+    "paths": {
+      "blue/blueTail": {
+        "comps": {
+          "cc.Sprite": {
+            "spriteFrame": [
+              {
+                "frame": 0,
+                "value": {
+                  "__uuid__": "101241c3-5bd3-4aa9-bb69-efb22c03fc9c"
+                }
+              }
+            ]
+          }
+        },
+        "props": {
+          "rotation": [
+            {
+              "frame": 0,
+              "value": -13
+            },
+            {
+              "frame": 0.2,
+              "value": 3
+            }
+          ]
+        }
+      },
+      "green/greenTail": {
+        "props": {
+          "rotation": [
+            {
+              "frame": 0,
+              "value": 6
+            },
+            {
+              "frame": 0.2,
+              "value": -1
+            }
+          ]
+        },
+        "comps": {
+          "cc.Sprite": {
+            "spriteFrame": [
+              {
+                "frame": 0,
+                "value": {
+                  "__uuid__": "c2197dea-4096-4830-ab65-9c9426f999da"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "yellow/yellowTail": {
+        "props": {
+          "rotation": [
+            {
+              "frame": 0,
+              "value": 7
+            },
+            {
+              "frame": 0.2,
+              "value": -2.6397666666708623
+            }
+          ]
+        },
+        "comps": {
+          "cc.Sprite": {
+            "spriteFrame": [
+              {
+                "frame": 0,
+                "value": {
+                  "__uuid__": "ddee799c-81a8-449f-bd6c-acbd9aa621f8"
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "events": []
+}

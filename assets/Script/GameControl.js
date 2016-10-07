@@ -20,9 +20,14 @@ cc.Class({
             type: cc.Node
         },
 
-        mountain: {
+        mountain01: {
             default: null,
             type: cc.Node
+        },
+
+        mountain02: {
+            default: null,
+            type:cc.Node
         },
 
         // -----------------下面三个属性与碰撞检测相关--------------------
@@ -65,15 +70,24 @@ cc.Class({
             this.groundAfter = cc.find('Canvas/rootCanvas/background/ground02');
         }
 
-        if (null == this.mountain) {
-            this.mountain = cc.find('Canvas/rootCanvas/background/mountain');
+        if (null == this.mountain01) {
+            this.mountainBefore = cc.find('Canvas/rootCanvas/background/mountain01');
         }
 
-        //-------------------------------构建两张地面图片接续-------------------------------
+        if (null == this.mountain02) {
+            this.mountainAfter = cc.find('Canvas/rootCanvas/background/mountain02');
+        }
+
+        //-------------------------------构建两张地面图片和背景山川图片的接续-------------------------------
         var x = this.groundBefore.x + this.groundBefore.width * this.groundBefore.scaleX;   //得到接续的X坐标
         var y = this.groundBefore.y   //得到接续的Y坐标
         this.groundAfter.x = x;
         this.groundAfter.y = y;
+
+        x = this.mountainBefore.x + this.mountainBefore.width * this.mountainBefore.scaleX;
+        y = this.mountainBefore.y;
+        this.mountainAfter.x = x;
+        this.mountainAfter.y = y;
 
         this.scrolledDistance = 0;  // 记录已卷动的距离
 
@@ -93,9 +107,13 @@ cc.Class({
             // 此时应该卷动画面
             this.groundBefore.x -= playerScript.playerSpeed * dt;  // 实现地面的滚动
             this.groundAfter.x -= playerScript.playerSpeed * dt;
+            // 同时卷动背景山川
+            this.mountainBefore.x -= playerScript.playerSpeed * dt / 20;   // 以十分之一的速度卷动背景山川
+            this.mountainAfter.x -= playerScript.playerSpeed * dt / 20;
 
-            if (this.groundBefore.x <= -(1920 + 480)) {
-                // 开始交换
+
+            if (this.groundBefore.x <= -(this.groundBefore.width * this.groundBefore.scaleX + cc.director.getVisibleSize().width / 2)) {
+                // 开始交换地面图片
                 var temp = this.groundBefore;
                 this.groundBefore = this.groundAfter;
                 this.groundAfter = temp;
@@ -105,6 +123,23 @@ cc.Class({
                 var y = this.groundBefore.y   //得到接续的Y坐标
                 this.groundAfter.setPosition(x, y);
             }
+
+
+            if(this.mountainBefore.x <= -(this.mountainBefore.width * this.mountainBefore.scaleX + cc.director.getVisibleSize().width / 2)) {
+                
+                // 开始交换背景图片
+                var temp = this.mountainBefore;
+                this.mountainBefore = this.mountainAfter;
+                this.mountainAfter = temp;
+                //-----------------------构建两张地面图片接续--------------------------
+                var x = this.mountainBefore.x + this.mountainBefore.width * this.mountainBefore.scaleX;  //得到接续的X坐标
+                var y = this.mountainBefore.y   //得到接续的Y坐标
+                this.mountainAfter.setPosition(x, y);
+            }
+
+
+
+
 
             this.scrolledDistance += playerScript.playerSpeed * dt;  // 累加滚动距离
         }
