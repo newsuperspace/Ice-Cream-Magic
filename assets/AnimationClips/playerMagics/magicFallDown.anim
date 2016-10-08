@@ -1,0 +1,47 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "magicFallDown",
+  "_objFlags": 0,
+  "_rawFiles": null,
+  "_duration": 1,
+  "sample": 10,
+  "speed": 1,
+  "wrapMode": 1,
+  "curveData": {
+    "props": {
+      "y": [
+        {
+          "frame": 0,
+          "value": 324,
+          "curve": [
+            0.17,
+            0.42,
+            0.76,
+            0.28
+          ]
+        },
+        {
+          "frame": 1,
+          "value": -271
+        }
+      ]
+    }
+  },
+  "events": [
+    {
+      "frame": 0,
+      "func": "playStart",
+      "params": []
+    },
+    {
+      "frame": 0.3,
+      "func": "playChange",
+      "params": []
+    },
+    {
+      "frame": 0.4,
+      "func": "playStill",
+      "params": []
+    }
+  ]
+}

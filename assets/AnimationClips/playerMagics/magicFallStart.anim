@@ -27,7 +27,28 @@
               "frame": 0.2,
               "value": 4
             }
+          ],
+          "position": [
+            {
+              "frame": 0,
+              "value": [
+                94,
+                -31
+              ]
+            }
           ]
+        },
+        "comps": {
+          "cc.Sprite": {
+            "spriteFrame": [
+              {
+                "frame": 0,
+                "value": {
+                  "__uuid__": "3b1acbd1-2dd8-470d-b7b8-5b595a7d5b16"
+                }
+              }
+            ]
+          }
         }
       },
       "green/greenTail": {
@@ -45,7 +66,28 @@
               "frame": 0.2,
               "value": 6
             }
+          ],
+          "position": [
+            {
+              "frame": 0,
+              "value": [
+                0,
+                -27
+              ]
+            }
           ]
+        },
+        "comps": {
+          "cc.Sprite": {
+            "spriteFrame": [
+              {
+                "frame": 0,
+                "value": {
+                  "__uuid__": "f83f87df-e8cc-4d95-954a-0a5373a8f22e"
+                }
+              }
+            ]
+          }
         }
       },
       "yellow/yellowTail": {
@@ -63,7 +105,28 @@
               "frame": 0.2,
               "value": -5
             }
+          ],
+          "position": [
+            {
+              "frame": 0,
+              "value": [
+                -115,
+                -47
+              ]
+            }
           ]
+        },
+        "comps": {
+          "cc.Sprite": {
+            "spriteFrame": [
+              {
+                "frame": 0,
+                "value": {
+                  "__uuid__": "420b1fa3-00d4-4e06-b21b-bd28b6ab7780"
+                }
+              }
+            ]
+          }
         }
       }
     }

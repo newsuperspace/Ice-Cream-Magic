@@ -3,8 +3,8 @@
   "_name": "magicFallChange",
   "_objFlags": 0,
   "_rawFiles": null,
-  "_duration": 0.3,
-  "sample": 10,
+  "_duration": 0.6,
+  "sample": 5,
   "speed": 1,
   "wrapMode": 1,
   "curveData": {
@@ -20,13 +20,13 @@
                 }
               },
               {
-                "frame": 0.1,
+                "frame": 0.2,
                 "value": {
                   "__uuid__": "101241c3-5bd3-4aa9-bb69-efb22c03fc9c"
                 }
               },
               {
-                "frame": 0.2,
+                "frame": 0.4,
                 "value": {
                   "__uuid__": "acbd3ffb-39d1-4059-8943-d8f5e5a082e7"
                 }
@@ -41,7 +41,7 @@
               "value": -20
             },
             {
-              "frame": 0.2,
+              "frame": 0.4,
               "value": -6
             }
           ]
@@ -55,7 +55,7 @@
               "value": -16
             },
             {
-              "frame": 0.2,
+              "frame": 0.4,
               "value": 0
             }
           ]
@@ -70,13 +70,13 @@
                 }
               },
               {
-                "frame": 0.1,
+                "frame": 0.2,
                 "value": {
                   "__uuid__": "c2197dea-4096-4830-ab65-9c9426f999da"
                 }
               },
               {
-                "frame": 0.2,
+                "frame": 0.4,
                 "value": {
                   "__uuid__": "77b270a7-2cb5-4ce0-9c82-f433bb359227"
                 }
@@ -93,7 +93,7 @@
               "value": -39
             },
             {
-              "frame": 0.2,
+              "frame": 0.4,
               "value": -23
             }
           ]
@@ -108,13 +108,13 @@
                 }
               },
               {
-                "frame": 0.1,
+                "frame": 0.2,
                 "value": {
                   "__uuid__": "ddee799c-81a8-449f-bd6c-acbd9aa621f8"
                 }
               },
               {
-                "frame": 0.2,
+                "frame": 0.4,
                 "value": {
                   "__uuid__": "068d8ab9-3ebc-4e35-b77d-be29ce98a21b"
                 }
@@ -125,5 +125,11 @@
       }
     }
   },
-  "events": []
+  "events": [
+    {
+      "frame": 0.6,
+      "func": "playStill",
+      "params": []
+    }
+  ]
 }
