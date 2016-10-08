@@ -9,6 +9,10 @@ cc.Class({
             type: cc.Integer
         },
 
+        healthValue: {   // 自定义生命值
+            default: 100,
+            type: cc.Integer
+        },
 
     },
 
@@ -16,6 +20,7 @@ cc.Class({
     onLoad: function () {
 
         this.player = this.node.parent.getChildByName('player');   // 因为敌人节点、player节点、法术节点都是在同一个父节点foe之下
+        this.health = this.healthValue;
 
     },
 
@@ -24,6 +29,10 @@ cc.Class({
         var position = this.node.getPosition();
         this.player.getComponent('player').shooting(position);
     },
+
+
+    
+
 
 
 

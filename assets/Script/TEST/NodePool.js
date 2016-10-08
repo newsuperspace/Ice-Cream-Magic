@@ -11,7 +11,10 @@ var NodePool = cc.Class({
         // 一个预制属性，每个对象池实例对应一种节点
         prefab: cc.Prefab,
         // 一个size尺寸，表示对象池的大小
-        size: 0,
+        size: {
+            default: 0,
+            type: cc.Integer
+        },
         
     },
 
@@ -86,7 +89,7 @@ var NodePool = cc.Class({
             // 如果确实拿到了这个节点（不为null），则设置其active为true
             // 当节点的active属性被重新设置为true的时候，就会重新执行节点上所挂载所有组件的onLoad()方法
             // 也就是说生命周期重新开始，节点犹如重生
-            obj.active = true;    // 等同于执行脚本的onload方法
+            obj.active = true;    // 等同于执行脚本的onload方法,onload方法会在每次节点从false重新设置为true的时候调用一次
             cc.log('NodePool:'+obj.activeInHierarchy);
 
             

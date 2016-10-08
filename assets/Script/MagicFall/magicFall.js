@@ -1,3 +1,5 @@
+const enumType = require('enum');
+
 cc.Class({
     extends: cc.Component,
 
@@ -12,13 +14,20 @@ cc.Class({
             type: cc.Integer
         },
 
-
-
+        damageValue: {
+            default: 100,
+            type: cc.Integer
+        },
 
     },
 
     // use this for initialization
     onLoad: function () {
+
+        var manager = cc.director.getCollisionManager();
+            manager.enabled = true;
+
+        this.player = cc.find('Canvas/rootCanvas/foe/player');   // 查找到角色player节点对象
 
         // 保证所有节点都被激活
         for(var i = 0; i<this.node.children[0].children.length; i++)
@@ -33,7 +42,6 @@ cc.Class({
         }
 
         this.anims = ['magicFallStart','magicFallChange','magicFallStill','magicFallDown'];
-
     },
 
     // ==================================播放子节点rootFall上的形态改变动画=====================================
@@ -61,7 +69,6 @@ cc.Class({
         this.node.setPosition(position.x, cc.director.getVisibleSize.height / 2); 
         // 播放下坠动作动画
         this.node.getComponent(cc.Animation).play(this.anims[3]);
-
     },
 
     // 测试按钮回调方法
@@ -71,7 +78,23 @@ cc.Class({
     },
 
 
-    update: function (dt) {
+    // 返回对象池
+    recycle: function () {
+        this.node.active = false;
+        var manager = this.player.getComponent('PoolManager');
+        manager.backNode(enumType.playerMagicType.fall, this.node);
+    },
 
+
+    // 监控是否因该返回到对象池中去了
+    update: function (dt) {
+        var blue = cc.find('fallRoot/blue/blueBall', this.node);
+        var green = cc.find('fallRoot/green/greenBall', this.node);
+        var yellow = cc.find('fallRoot/yellow/yellowBall', this.node);
+
+        if(!blue.active && !green.active && !yellow.active){
+            cc.log('回收fall资源了');
+            this.recycle();
+        }
     },
 });

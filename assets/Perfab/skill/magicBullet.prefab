@@ -39,8 +39,8 @@
     "_scaleY": 1.75,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": -436,
-      "y": 243
+      "x": 154,
+      "y": 211
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -142,7 +142,8 @@
     "atlas": {
       "__uuid__": "66b131a0-4168-4ff7-b880-d41292ceea4c"
     },
-    "flySpeed": 400
+    "flySpeed": 400,
+    "damageValue": 20
   },
   {
     "__type__": "cc.PrefabInfo",

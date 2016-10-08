@@ -4,8 +4,10 @@ var EnumType = require('enum');
 
 var NodePool = require('NodePool');
 
+var life = require('life');
+
 cc.Class({
-    extends: cc.Component,
+    extends: life,
 
     properties: {
 
@@ -98,7 +100,7 @@ cc.Class({
     // 玩家角色移动功能---------本方法是在当前脚本内部的update()中调用的
     Move: function (dt) {
 
-        // 如果人物当前处于将之状态，则直接退出
+        // 如果人物当前处于僵直状态，则直接退出
         if (this.isStiffing())
             return;
 
@@ -279,11 +281,11 @@ cc.Class({
         // 现在只要设置起始的位置坐标就行了
         node.getComponent('magicBullet').confirmFlyForward(position);
 
+
         // 技能释放完成后，清空冷却事件累计变量为0
         this.magicBulletPrepareTime = 0;
         // 硬质时间归0
         this.passedBulletStiffTime = 0;
-
     },
 
 

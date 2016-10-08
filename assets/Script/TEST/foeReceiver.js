@@ -53,6 +53,7 @@ cc.Class({
 });
 
 
+// 这是一种特殊的内定义数据结构，用来存放一个节点及该节点上所挂载的逻辑控制组件，从而方便指定方法的调用
 var nodeAndFoeMotherTypeComponent = cc.Class({
 
     properties:{

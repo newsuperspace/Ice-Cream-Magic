@@ -1,5 +1,7 @@
 const enumType = require('enum');
 
+const life = require('life');
+
 cc.Class({
     extends: cc.Component,
 
@@ -12,6 +14,11 @@ cc.Class({
 
         flySpeed: {   // 魔法飞弹的飞行速度
             default: 600,
+            type: cc.Integer
+        },
+
+        damageValue: {
+            default: 20,
             type: cc.Integer
         }
     },
@@ -50,7 +57,7 @@ cc.Class({
     // scaleX == 1 右侧
     // scaleX == -1 左侧
     initPosition: function () {
-                                
+
         // var player = cc.find('Canvas/rootCanvas/foe/player');
         var player = this.player;
 
@@ -83,7 +90,7 @@ cc.Class({
 
         var startPosition = this.initPosition();
         this.flyForward = cc.pNormalize(cc.pSub(position, startPosition));
-        
+
         this.stopMoving = false;   // 不停止飞行
         this.node.getComponent(cc.Sprite).spriteFrame = this.atlas.getSpriteFrame(this.spriteFrames[this.index]);  // 重置外观
     },
@@ -91,7 +98,7 @@ cc.Class({
     // 向指定目标飞行
     flying: function (dt) {
 
-        cc.log('飞行速度为:'+this.flySpeed);
+        cc.log('飞行速度为:' + this.flySpeed);
 
         this.node.x += this.flyForward.x * this.flySpeed * dt;
         this.node.y += this.flyForward.y * this.flySpeed * dt;
@@ -112,8 +119,17 @@ cc.Class({
         // 停止飞弹的运动
         this.stopMoving = true;
 
+        var script = other.node.getComponent(life);
+        if (script) {
+            // 如果脚本不为null，则说明碰撞上的是有生命的敌人实体对象
+            script.hurted(this.damageValue);
+        }
+        else {
+            // 否则，碰撞上的是没有生命的对象，比如地面等
+        }
         // 对于子弹来说只需要破裂消失就好了
         this.node.getComponent(cc.Animation).play(this.animNames[this.index]);   // 播放动画
+
     },
 
     // -------------------------------------------------刷新绘制帧-------------------------------------------------
@@ -127,7 +143,7 @@ cc.Class({
         }
         else {
 
-            if(!this.stopMoving && this.flyForward)
+            if (!this.stopMoving && this.flyForward)
                 this.flying(dt); // 没超出可视范围————继续绘制飞弹的新位置
         }
 

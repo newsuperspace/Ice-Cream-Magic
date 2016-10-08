@@ -886,8 +886,10 @@
   },
   {
     "__type__": "NodePool",
-    "prefab": null,
-    "size": 0
+    "prefab": {
+      "__uuid__": "4929769b-db1e-4a9c-ac4b-6cede6f82998"
+    },
+    "size": 2
   },
   {
     "__type__": "cc.Node",
@@ -1105,7 +1107,8 @@
       "__id__": 24
     },
     "_enabled": true,
-    "moveSpeed": 100
+    "moveSpeed": 100,
+    "healthValue": 100
   },
   {
     "__type__": "9cd9dfrWeJK8pXHnc6K16Qx",

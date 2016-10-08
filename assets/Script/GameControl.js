@@ -45,7 +45,7 @@ cc.Class({
     // use this for initialization
     onLoad: function () {
 
-        // -----------------------------------碰撞检测相关---------------------------------------
+        // -----------------------------------碰撞检测相关控制---------------------------------------
         var manager = cc.director.getCollisionManager();
 
         if(manager.enabled != this.openCollision)
@@ -98,7 +98,7 @@ cc.Class({
 
     },
 
-    // 滚动地面的逻辑
+    // 滚动地面和背景的逻辑
     scroll: function (dt) {
 
         var playerScript = this.player.getComponent('player');
@@ -136,10 +136,6 @@ cc.Class({
                 var y = this.mountainBefore.y   //得到接续的Y坐标
                 this.mountainAfter.setPosition(x, y);
             }
-
-
-
-
 
             this.scrolledDistance += playerScript.playerSpeed * dt;  // 累加滚动距离
         }

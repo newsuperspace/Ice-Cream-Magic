@@ -1,6 +1,10 @@
+
+var life = require('life');
+
+
 // 近乎于一种标记接口，所有敌人节点的逻辑控制组件都必须是继承自我们这个标记ccclass
 cc.Class({
-    extends: cc.Component,
+    extends: life,
 
     properties: {
         // foo: {
@@ -17,11 +21,13 @@ cc.Class({
 
     // use this for initialization
     onLoad: function () {
-
+       
     },
 
     // called every frame, uncomment this function to activate update callback
     // update: function (dt) {
 
     // },
+
+
 });

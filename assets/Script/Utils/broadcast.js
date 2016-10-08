@@ -27,8 +27,9 @@ var broadcast = cc.Class({
 
     // 静态成员定义
     // 值类型：Object
+    // 在这里定义只属于当前脚本所定义的这个ccclass类（本质是一个Function对象）的属性和方法，调用这些静态方法直接通过ccclass即可，无需先创建实例对象
     statics: {
-        _clickPoints: [],
+        _clickPoints: [],   // 存放点击触碰点位置坐标（世界坐标系——以屏幕左下角为原点的坐标系）
 
         getClickPointsCount: function () {
 
@@ -44,6 +45,10 @@ var broadcast = cc.Class({
             this._clickPoints.push(position);
         },
 
+
+
+
+        // 参数nodes是一个数组，其元素类型是在脚本foeReceiver中定义的名为nodeAndFoeMotherTypeComponent类型
         hasTouchedOneChildNode: function( nodes ){     // 这个方法会被foe层面的update轮番调用，foe会将他之下的所有敌人节点放入到数组nodes中传递进来
             // 遍历clickPoints数组中的每个点击点，判断是否有位于nodes中的节点的范围框内的，如果有就出发这个node的发射魔法飞弹的逻辑，当所有nodes判断完后
             // 清空clickPoints
