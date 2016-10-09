@@ -35,73 +35,74 @@ cc.Class({
 
 
         // ---------------------------------------------事件监听器------------------------------------------------
-
-        // 保存当前逻辑控制组件实例对象引用到self，该变量可以在事件监听器内的事件处理例程中使用，因为未来事件处理例程的调用者不再是当前脚本组件对象，因此需要
-        // 提前保存当前脚本组件对象来使用。这一点一定要多加注意，不论何时如此保存组件对象引用是个好习惯，因为你不知道当前脚本中的这个方法的调用者未来是否还是
-        // 当前脚本组件对象，由于js语言中方法中的this指的是调用该方法的实例对象，这与JAVA中this永远指代当前类实例的不同的，也就是说JS中的this会随时变动
-        // java中的this永远不变。6666666666666666
-        var self = this;   // 实际上调用事件处理例程的是下面通过{}引用类型的字面量表示形式定义的这个叫做listener的对象
-
-        // 添加单点触摸事件监听器
-        //  需要注意的是，单点触碰的信息获取只能通过各个事件处理例程的event参数
-        // 多点触碰的信息获取才能通过 var touch = touches[0]  来获取  666666666666666
-        var listener = {
-
-            event: cc.EventListener.TOUCH_ONE_BY_ONE,  // 当前构建的是单点触碰类型事件
-
-            onTouchBegan: function (touches, event) {
-
-                self.hasPressed = true;
-
-                // 不需要做什么,只需呀记录一下按下的时间点用作日后在update中比对就可以了
-                self.startTime = Date.now();
-                var position = touches.getLocation();   // 获取触点坐标（世界坐标系）
-                position = self.node.parent.convertToNodeSpaceAR(position);  // 将世界坐标系的坐标转变为Game节点坐标系坐标
-                self.position = position;
-
-                event.stopPropagation();   // 停止事件继续向parent节点方向传递，与Android从父向子传递不同，cocos是从子向父传递。66666666666
-                return true;    // 任何关于触碰点击的事件监听器，都是从Began开始，这里必须返回true，才能让之后的事件处理例程接收到后续事件，切记666666666
-            },
-
-            onTouchMoved: function (touches, event) {
-                // 时刻保存触点的位置坐标，并将坐标信息告知给作为子节点的  技能预览图节点对象，达到预览图随着手指移动的效果
-                var position = touches.getLocation();   // 获取触点坐标（世界坐标系）
-                position = self.node.parent.convertToNodeSpaceAR(position);  // 将世界坐标系的坐标转变为Game节点坐标系坐标
-                self.position = position;
-
-                event.stopPropagation();   // 停止事件继续向parent节点方向传递，与Android从父向子传递不同，cocos是从子向父传递。66666666666
-            },
-
-            onTouchEnded: function (touches, event) {
-
-                var script = self.showing.getComponent('showingFall');
-
-                if (script.hasTouchedFoe) {
-                    cc.log('释放技能');
-
-                } else {
-                    cc.log('不释放技能');
-
-                }
-
-                self.hasPressed = false;
-                self.startTime = 0;
-                self.position = null;
-                self.showing.active = false;
-
-                event.stopPropagation();   // 停止事件继续向parent节点方向传递，与Android从父向子传递不同，cocos是从子向父传递。66666666666
-            },
-
-            onTouchCancelled: function (touches, event) {
-                // 调用上面的onTouchEnded()事件处理例程
-                this.onTouchEnded(touches,event);   // this指的是listener对象，self指的才是脚本组件对象666666666
-            }
-        }
-        // 绑定单点触摸事件
-        cc.eventManager.addListener(listener, this.node);
+        // 这里之所以选择这种注册事件监听的方式而不是使用cc.EventManager.addListener() 是因为当前所监听的单点触碰事件的技能图标节点的父节点Game上已经有了使用
+        // cc.EventManager.addListener() 注册的多点触碰事件监听器，如果当前节点仍然使用EventManager的形式注册作为子节点的节能图标上的单点触碰事件监听器，由于
+        // cocos的事件传递原则，在当前节点的单击事件不仅被当前单点触碰事件监听器拦截，而且会继续传递给其父节点（Game）上的监听器。如果想阻止这种向上传递，就需要在
+        // 所有处理例程的结尾使用event.stopPropagation()来结束事件向父节点传递，但这时候又出现了一个问题，就是当前子节点会拦截所有屏幕上发生的触碰事件，不论这个
+        // 触碰是否出现在当前节点的体积框区域内。因此为了让Game和当前技能图标子节点分别响应发生在各自节点之上的触碰事件，我需要通过这种node.on()的方式明确地在指定
+        // 节点上注册制定类型的事件处理历程，这样只有在这个节点俄体积框的范围内发生指定类型的触碰事件的时候才会调用事件处理例程，同时该事件默认就是是这个节点独占的，
+        // 不会向上传递给父节点。66666666666666666666666666666666666666666
+        this.node.on(cc.Node.EventType.TOUCH_START, this.onTouchBegan, this);
+        this.node.on(cc.Node.EventType.TOUCH_MOVE, this.onTouchMoved, this);
+        this.node.on(cc.Node.EventType.TOUCH_END, this.onTouchEnded, this);
+        this.node.on(cc.Node.EventType.TOUCH_CANCEL, this.onTouchCancelled, this);
     },
 
-    // called every frame, uncomment this function to activate update callback
+    // =============================================单击事件监听器所调用之处理历程================================================
+    onTouchBegan: function(event) {
+        var touches = event.touch;
+
+        this.hasPressed = true;
+
+        // 不需要做什么,只需呀记录一下按下的时间点用作日后在update中比对就可以了
+        this.startTime = Date.now();
+        var position = touches.getLocation();   // 获取触点坐标（世界坐标系）
+        position = this.node.parent.convertToNodeSpaceAR(position);  // 将世界坐标系的坐标转变为Game节点坐标系坐标
+        this.position = position;
+
+        // event.stopPropagation();   // 停止事件继续向parent节点方向传递，与Android从父向子传递不同，cocos是从子向父传递。66666666666
+        return true;    // 任何关于触碰点击的事件监听器，都是从Began开始，这里必须返回true，才能让之后的事件处理例程接收到后续事件，切记666666666
+    },
+
+    onTouchMoved: function(event) {
+        var touches = event.touch;
+        // 时刻保存触点的位置坐标，并将坐标信息告知给作为子节点的  技能预览图节点对象，达到预览图随着手指移动的效果
+        var position = touches.getLocation();   // 获取触点坐标（世界坐标系）
+        position = this.node.parent.convertToNodeSpaceAR(position);  // 将世界坐标系的坐标转变为Game节点坐标系坐标
+        this.position = position;
+
+        // event.stopPropagation();   // 停止事件继续向parent节点方向传递，与Android从父向子传递不同，cocos是从子向父传递。66666666666
+    },
+
+    onTouchEnded: function(event) {
+
+        var script = this.showing.getComponent('showingFall');
+
+        if (script.hasTouchedFoe) {
+            cc.log('释放技能');
+
+
+        } else {
+            cc.log('不释放技能');
+        }
+
+        this.hasPressed = false;
+        this.startTime = 0;
+        this.position = null;
+        this.showing.active = false;
+
+        // event.stopPropagation();   // 停止事件继续向parent节点方向传递，与Android从父向子传递不同，cocos是从子向父传递。66666666666
+    },
+
+    onTouchCancelled: function(event) {
+        // 调用上面的onTouchEnded()事件处理例程
+        this.onTouchEnded(event);   // this指的是listener对象，this指的才是脚本组件对象666666666
+    },
+
+
+
+
+    // =========================================帧绘制方法========================================
     update: function (dt) {
 
 
