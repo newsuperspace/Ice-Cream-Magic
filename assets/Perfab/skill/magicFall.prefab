@@ -43,8 +43,8 @@
     "_scaleY": 1,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": -8,
-      "y": -36
+      "x": -26,
+      "y": -174
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -311,7 +311,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "4929769b-db1e-4a9c-ac4b-6cede6f82998"
     },
     "fileId": "94995VJjdxOkKrjbUHU9CWx",
     "sync": false
@@ -404,7 +404,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "4929769b-db1e-4a9c-ac4b-6cede6f82998"
     },
     "fileId": "8b22fi60dtIfpNG9fixjkaN",
     "sync": false
@@ -431,7 +431,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "4929769b-db1e-4a9c-ac4b-6cede6f82998"
     },
     "fileId": "6d1e2rr2TJPlow+mPKSuOTb",
     "sync": false
@@ -616,7 +616,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "4929769b-db1e-4a9c-ac4b-6cede6f82998"
     },
     "fileId": "b3e5cZxQPtF5LPzGrT2dIt2",
     "sync": false
@@ -709,7 +709,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "4929769b-db1e-4a9c-ac4b-6cede6f82998"
     },
     "fileId": "73c42PwZqZJt5/EJUsXepgI",
     "sync": false
@@ -736,7 +736,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "4929769b-db1e-4a9c-ac4b-6cede6f82998"
     },
     "fileId": "aadd0xJp15Ar4yc+Prp7duf",
     "sync": false
@@ -921,7 +921,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "4929769b-db1e-4a9c-ac4b-6cede6f82998"
     },
     "fileId": "6940bx812tFF7FNIF07DjHL",
     "sync": false
@@ -1014,7 +1014,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "4929769b-db1e-4a9c-ac4b-6cede6f82998"
     },
     "fileId": "bcd49mK7/ZM24TVjwMqON7p",
     "sync": false
@@ -1041,7 +1041,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "4929769b-db1e-4a9c-ac4b-6cede6f82998"
     },
     "fileId": "61aa7+dZVtI87GBhK1m03WA",
     "sync": false
@@ -1074,7 +1074,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "4929769b-db1e-4a9c-ac4b-6cede6f82998"
     },
     "fileId": "001c9fcdZ1NEKRqncLAI+wp",
     "sync": false
@@ -1113,7 +1113,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "4929769b-db1e-4a9c-ac4b-6cede6f82998"
     },
     "fileId": "ea6a3J9861IkqeiVrqBETeF",
     "sync": false

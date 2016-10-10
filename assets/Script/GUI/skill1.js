@@ -115,10 +115,16 @@ cc.Class({
     onTouchEnded: function (event) {
 
         var script = this.showing.getComponent('showingFall');
+        var touches = event.touch;
+        var position = touches.getLocation();
 
         if (script.hasTouchedFoe) {
             cc.log('释放技能');
 
+            var receiver = this.node.parent.getComponent('gameReceiver');
+
+            cc.log('fall技能位置坐标：'+position.x+','+position.y);
+            receiver.setSkill1Position(position);
 
         } else {
             cc.log('不释放技能');

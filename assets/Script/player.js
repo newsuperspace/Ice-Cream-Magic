@@ -297,7 +297,12 @@ cc.Class({
         }
 
         var manager = this.node.getComponent('PoolManager');
-        var node = manager.requestNode(EnumType.playerMagicType.fall);  // 从特定的对象池中取得魔法实例对象节点
+        // var node = manager.requestNode(EnumType.playerMagicType.fall);  // 从特定的对象池中取得魔法实例对象节点
+        var prefab = manager.Pools[2].prefab
+        var node =  cc.instantiate(prefab);
+        node.active = true;
+        node.parent = this.node.parent;
+
 
         // 发射魔法的时候player人物要朝向敌人的方向
         if (position.x > this.node.x) {
@@ -307,6 +312,7 @@ cc.Class({
             this.node.scaleX = -Math.abs(this.node.scaleX); //  人物图片脸部向左
         }
 
+        node.getComponent('magicFall').activeAllNodes();
         // 发射魔法效果，前提条件仅仅是给出下落的位置坐标即可
         node.getComponent('magicFall').magicFallStart(position);
 
@@ -316,11 +322,6 @@ cc.Class({
         this.passedFallStiffTime = 0;
 
     },
-
-
-
-
-
 
 
     // ==================================帧绘制任务功能==================================
@@ -339,7 +340,7 @@ cc.Class({
                 // 如果超过了规定的CD时间，则说明技能已经准备好，将累计变量更改为CD上限就说明可以发动技能了
                 this.magicBulletPrepareTime = this.magicBulletCD;
             }
-            cc.log('技能冷却时间累计:' + this.magicBulletPrepareTime);
+            cc.log('ball技能冷却时间累计计量:' + this.magicBulletPrepareTime);
         }
 
         if (this.magicGouPrepareTime < this.magicGouCD)  // 如果飞弹技能的冷却累计时间没有达到规定的CD事件，则
@@ -360,6 +361,7 @@ cc.Class({
                 // 如果超过了规定的CD时间，则说明技能已经准备好，将累计变量更改为CD上限就说明可以发动技能了
                 this.magicFallPrepareTime = this.magicFallCD;
             }
+
         }
 
         //----------------------------- 人物僵直时间流逝-------------------------------
@@ -380,9 +382,10 @@ cc.Class({
             }
         }
 
+        // cc.log(this.passedFallStiffTime < this.fallStiffTime);
         if (this.passedFallStiffTime < this.fallStiffTime) {
 
-            this.passedBulletStiffTime += dt * 1000;
+            this.passedFallStiffTime += dt * 1000;
             if (this.passedFallStiffTime > this.fallStiffTime) {
                 this.passedFallStiffTime = this.fallStiffTime;
             }

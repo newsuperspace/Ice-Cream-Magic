@@ -28,6 +28,8 @@ cc.Class({
         else {
             // 否则，碰撞上的是没有生命的对象，比如地面等
         }
+
+        // 可不管碰上什么物体，自身都要播放碎裂的动画效果
         self.node.parent.getComponent(cc.Animation).play('magicFallBlue');  // 得到父节点blue上的动画组件，并调用其上的动画
 
     },

@@ -34,14 +34,27 @@ cc.Class({
 
     },
 
+
+    // 该方法由skill脚本控件的onTouchEnded事件处理过程在玩家释放技能按钮的是判定释放技能的逻辑分支中调用，用来将这一刻技能释放位置的坐标存放到broadcast中供foeReceiver巡视使用
+    setSkill1Position: function(position){
+        broadcast.skill1AttackPosition = position;
+    },
+
+    setSkill2Position: function(position){
+        broadcast.skill2AttackPosition = position;
+    },
+
+
+
     // called every frame, uncomment this function to activate update callback
     update: function (dt) {
 
         var skill1Script = this.skill1.getComponent('skill1');
 
-        // 调控 skill1节点
+        // 调控 skill1节点   
         if(1 != broadcast.skill1CDPercent)    // 技能冷却的逻辑
         {
+            cc.log('fall进行技能冷却');
             // 关闭skill1节点的事件监听器
             if(skill1Script.listenerOpened)
             {
@@ -61,6 +74,7 @@ cc.Class({
             }
 
             skill1Script.black.getComponent(cc.ProgressBar).progress = 1 - broadcast.skill1CDPercent
+            cc.log('fall技能冷却剩余百分比：'+Math.floor(skill1Script.black.getComponent(cc.ProgressBar).progress*100));
         }
         else{   // 技能正常使用状态的维持判定
 

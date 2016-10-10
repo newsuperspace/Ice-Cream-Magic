@@ -4,12 +4,12 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-        fallSpeed:{
+        fallSpeed: {
             default: 100,
             type: cc.Integer
         },
 
-        elevation :{    // 当魔法节点距离屏幕可见上缘多少像素的时候的开始播放转换尾炎的动画
+        elevation: {    // 当魔法节点距离屏幕可见上缘多少像素的时候的开始播放转换尾炎的动画
             default: 100,
             type: cc.Integer
         },
@@ -24,38 +24,47 @@ cc.Class({
     // use this for initialization
     onLoad: function () {
 
+        // 启动碰撞检测
         var manager = cc.director.getCollisionManager();
-            manager.enabled = true;
+        manager.enabled = true;
+
+        this.blue = cc.find('fallRoot/blue/blueBall', this.node);
+        this.green = cc.find('fallRoot/green/greenBall', this.node);
+        this.yellow = cc.find('fallRoot/yellow/yellowBall', this.node);
 
         this.player = cc.find('Canvas/rootCanvas/foe/player');   // 查找到角色player节点对象
 
+        this.anims = ['magicFallStart', 'magicFallChange', 'magicFallStill', 'magicFallDown'];
+
+        this.activeAllNodes();
+    },
+
+    activeAllNodes: function () {
         // 保证所有节点都被激活
-        for(var i = 0; i<this.node.children[0].children.length; i++)
-        {
+        for (var i = 0; i < this.node.children[0].children.length; i++) {
             let child = this.node.children[0].children[i];
             child.active = true;
 
-            for(var j = 0; j < child.children.length; j++)
-            {
+            for (var j = 0; j < child.children.length; j++) {
                 child.children[j].active = true;
             }
         }
-
-        this.anims = ['magicFallStart','magicFallChange','magicFallStill','magicFallDown'];
     },
 
+
+
     // ==================================播放子节点rootFall上的形态改变动画=====================================
-    playStart: function(){
+    playStart: function () {
         this.node.children[0].getComponent(cc.Animation).play(this.anims[0]);
         cc.log('执行了start');
     },
 
-    playChange: function(){
+    playChange: function () {
         this.node.children[0].getComponent(cc.Animation).play(this.anims[1]);
         cc.log('执行了change');
     },
 
-    playStill: function(){
+    playStill: function () {
         this.node.children[0].getComponent(cc.Animation).play(this.anims[2]);
         cc.log('执行了still');
     },
@@ -63,40 +72,54 @@ cc.Class({
 
     // ===========================================魔法的启动源头================================================
     // 参数position类型为cc.Vec2 告知目标的下落撞击点的位置坐标
-    magicFallStart: function(position){
+    magicFallStart: function (position) {
+
+        cc.log('magicFallStart已经开动了');
+
+        // 将位置坐标转换为父节点foe节点的坐标系的坐标
+        var pos = this.node.parent.convertToNodeSpaceAR(position);
+        cc.log('fall技能start修正坐标：' + pos.x + ',' + pos.y);
+
 
         // 设置魔法集合体的初始位置
-        this.node.setPosition(position.x, cc.director.getVisibleSize.height / 2); 
+        // this.node.setPosition(pos.x, cc.director.getVisibleSize().height / 2); 
+        this.node.x = pos.x;
+
+        cc.log('fall节点起始位置是：' + this.node.x + ',' + this.node.y);
         // 播放下坠动作动画
         this.node.getComponent(cc.Animation).play(this.anims[3]);
     },
 
     // 测试按钮回调方法
-    play: function(){
+    play: function () {
+        this.node.active = false;
+        this.node.active = true;
+
         this.node.getComponent(cc.Animation).play(this.anims[3]);
         cc.log('play了');
     },
 
 
 
-    
-
     // 返回对象池
     recycle: function () {
+
+        cc.log('fall技能回收了');
+
+        // var manager = this.player.getComponent('PoolManager');
+        // manager.backNode(enumType.playerMagicType.fall, this.node);
+
         this.node.active = false;
-        var manager = this.player.getComponent('PoolManager');
-        manager.backNode(enumType.playerMagicType.fall, this.node);
+        this.node.parent = null;
     },
 
 
     // 监控是否因该返回到对象池中去了
     update: function (dt) {
-        var blue = cc.find('fallRoot/blue/blueBall', this.node);
-        var green = cc.find('fallRoot/green/greenBall', this.node);
-        var yellow = cc.find('fallRoot/yellow/yellowBall', this.node);
 
-        if(!blue.active && !green.active && !yellow.active){
-            cc.log('回收fall资源');
+        cc.log('fall位置变化：' + this.node.x + ',' + this.node.y);
+
+        if (!this.blue.active && !this.green.active && !this.yellow.active) {
             this.recycle();
         }
     },

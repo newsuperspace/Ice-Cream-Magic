@@ -83,7 +83,7 @@ var NodePool = cc.Class({
         if ( obj ) {
            
             if(this.fatherNode)
-                cc.log('fatherNodeNode can be  used');
+                cc.log('fatherNode can be  used');
 
             obj.parent = this.fatherNode;  // 将节点对象添加到foe父节点下
             // 如果确实拿到了这个节点（不为null），则设置其active为true
@@ -93,9 +93,7 @@ var NodePool = cc.Class({
             cc.log('NodePool:'+obj.activeInHierarchy);
 
             
-            cc.log('飞弹实例获取成功');
-            cc.log(obj.getComponent('magicBullet').flySpeed);
-            cc.log('初始坐标'+obj.x+','+obj.y);
+            cc.log('魔法实例获取成功');
          }
 
         return obj; // 返回这个对象即可

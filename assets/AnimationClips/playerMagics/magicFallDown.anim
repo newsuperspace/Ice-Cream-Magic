@@ -34,12 +34,12 @@
       "params": []
     },
     {
-      "frame": 0.3,
+      "frame": 0.4,
       "func": "playChange",
       "params": []
     },
     {
-      "frame": 0.4,
+      "frame": 0.5,
       "func": "playStill",
       "params": []
     }
