@@ -13,6 +13,16 @@ cc.Class({
             default: 500,   // 500ms
             type: cc.Integer,
             tooltip: '技能预览显示节点在按下图标后多少毫秒（ms）后出现'
+        },
+
+        gray: {
+            default: null,
+            type: cc.Node
+        },
+
+        black:{
+            default: null,
+            type: cc.Node
         }
 
 
@@ -28,12 +38,27 @@ cc.Class({
         }
         this.showing.active = false;
 
+        if(!this.gray)
+        {
+            this.gray = cc.find('gray',this.node);
+        }
+
+        if(!this.black)
+        {
+            this.black = cc.find('black',this.node);
+        }
+
+
         this.hasPressed = false;  // 技能图标是否已经被按下了？
         this.position = null;  // 实时更新手指触碰点的位置坐标（通过onTouchMoved历程更新）
 
+        
+        this.register();  // 开启事件监听器
+    },
 
+    // ===================注册和注销事件监听器的封装方法===================
 
-
+    register: function () {
         // ---------------------------------------------事件监听器------------------------------------------------
         // 这里之所以选择这种注册事件监听的方式而不是使用cc.EventManager.addListener() 是因为当前所监听的单点触碰事件的技能图标节点的父节点Game上已经有了使用
         // cc.EventManager.addListener() 注册的多点触碰事件监听器，如果当前节点仍然使用EventManager的形式注册作为子节点的节能图标上的单点触碰事件监听器，由于
@@ -46,10 +71,23 @@ cc.Class({
         this.node.on(cc.Node.EventType.TOUCH_MOVE, this.onTouchMoved, this);
         this.node.on(cc.Node.EventType.TOUCH_END, this.onTouchEnded, this);
         this.node.on(cc.Node.EventType.TOUCH_CANCEL, this.onTouchCancelled, this);
+
+        this.listenerOpened = true; // 标志位，用来在gameReceiver中获知当前节点监听器是否正在工作
     },
 
+    logout: function () {
+        this.node.off(cc.Node.EventType.TOUCH_START, this.onTouchBegan, this);
+        this.node.off(cc.Node.EventType.TOUCH_MOVE, this.onTouchMoved, this);
+        this.node.off(cc.Node.EventType.TOUCH_END, this.onTouchEnded, this);
+        this.node.off(cc.Node.EventType.TOUCH_CANCEL, this.onTouchCancelled, this);
+
+        this.listenerOpened = false;   // 标志位，用来在gameReceiver中获知当前节点监听器是否正在工作
+    },
+
+
+
     // =============================================单击事件监听器所调用之处理历程================================================
-    onTouchBegan: function(event) {
+    onTouchBegan: function (event) {
         var touches = event.touch;
 
         this.hasPressed = true;
@@ -64,7 +102,7 @@ cc.Class({
         return true;    // 任何关于触碰点击的事件监听器，都是从Began开始，这里必须返回true，才能让之后的事件处理例程接收到后续事件，切记666666666
     },
 
-    onTouchMoved: function(event) {
+    onTouchMoved: function (event) {
         var touches = event.touch;
         // 时刻保存触点的位置坐标，并将坐标信息告知给作为子节点的  技能预览图节点对象，达到预览图随着手指移动的效果
         var position = touches.getLocation();   // 获取触点坐标（世界坐标系）
@@ -74,7 +112,7 @@ cc.Class({
         // event.stopPropagation();   // 停止事件继续向parent节点方向传递，与Android从父向子传递不同，cocos是从子向父传递。66666666666
     },
 
-    onTouchEnded: function(event) {
+    onTouchEnded: function (event) {
 
         var script = this.showing.getComponent('showingFall');
 
@@ -94,7 +132,7 @@ cc.Class({
         // event.stopPropagation();   // 停止事件继续向parent节点方向传递，与Android从父向子传递不同，cocos是从子向父传递。66666666666
     },
 
-    onTouchCancelled: function(event) {
+    onTouchCancelled: function (event) {
         // 调用上面的onTouchEnded()事件处理例程
         this.onTouchEnded(event);   // this指的是listener对象，this指的才是脚本组件对象666666666
     },

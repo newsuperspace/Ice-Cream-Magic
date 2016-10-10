@@ -28,7 +28,23 @@ var broadcast = cc.Class({
     // 静态成员定义
     // 值类型：Object
     // 在这里定义只属于当前脚本所定义的这个ccclass类（本质是一个Function对象）的属性和方法，调用这些静态方法直接通过ccclass即可，无需先创建实例对象
+    // 这里的成员用来沟通控制层和显示层节点的数据交换
     statics: {
+       
+       // -----------------------------------------------与magicFall魔法相关的成员-------------------------------------------------
+       // ~~~~~~~~~~Game层 从 foe层 获取数据时使用的成员~~~~~~~~~~~~~~
+       skill1CDPercent: 1.0,   // Game层上的skill1节点会从这里获取到从foe层的player节点所反馈来的技能冷却时间信息，用来设置skill1上的progressBar进度条(小数点后1位)
+       skill2CDPercent: 1.0,   // Game层上的skill2节点会从这里获取到从foe层的player节点所反馈来的技能冷却时间信息，用来设置skill2上的progressBar进度条（小数点后1位）
+
+    
+       // ~~~~~~~~~~foe层 从 Game层 获取数据时使用的成员~~~~~~~~~~~~~~
+       skill1AttackPosition: null,  // 从skill1节点返回来的技能释放的目标位置坐标，是一个cc.Vec2类型数据。由foeReceiver脚本获取并交由player节点上的逻辑组件使用
+       skill2AttackPosition: null,  // 从skill2节点返回来的技能释放的目标位置坐标，是一个cc.Vec2类型数据。由foeReceiver脚本获取并交由player节点上的逻辑组件使用
+       
+       
+       
+       // -----------------------------------------------与magicBall魔法球相关的成员-------------------------------------------------
+       
         _clickPoints: [],   // 存放点击触碰点位置坐标（世界坐标系——以屏幕左下角为原点的坐标系）
 
         getClickPointsCount: function () {

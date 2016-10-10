@@ -78,6 +78,9 @@ cc.Class({
     },
 
 
+
+    
+
     // 返回对象池
     recycle: function () {
         this.node.active = false;
@@ -93,7 +96,7 @@ cc.Class({
         var yellow = cc.find('fallRoot/yellow/yellowBall', this.node);
 
         if(!blue.active && !green.active && !yellow.active){
-            cc.log('回收fall资源了');
+            cc.log('回收fall资源');
             this.recycle();
         }
     },
