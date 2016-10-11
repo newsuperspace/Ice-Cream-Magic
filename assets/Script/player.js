@@ -55,6 +55,10 @@ cc.Class({
     // use this for initialization
     onLoad: function () {
 
+        this.stop2left = false;
+        this.stop2right = false;
+
+
         // 初始化对象池管理器，管理器会自动批量初始化其所管理的所有对象池，为对象池中对象的存取做好准备
         this.node.getComponent('PoolManager').init();
 
@@ -162,6 +166,9 @@ cc.Class({
         {
             this.node.scaleX = Math.abs(this.node.scaleX);  // 图片方向向右
 
+            if(this.stop2right)    // 右边有敌人，不能继续向右移动位置
+                return;
+
             var distance = dt * this.playerSpeed;
 
             if ((this.node.x + distance) >= (cc.director.getVisibleSize().width / 2)) {
@@ -180,6 +187,9 @@ cc.Class({
         } else {  // 触点的X坐标小于player节点的x坐标
 
             this.node.scaleX = -Math.abs(this.node.scaleX); // 图片方向向左
+
+            if(this.stop2left)    // 左边有敌人，不能继续向左移动位置
+                return;
 
             var distance = dt * this.playerSpeed;
 
@@ -322,6 +332,53 @@ cc.Class({
         this.passedFallStiffTime = 0;
 
     },
+
+    // ==================================碰撞检测功能相关==================================
+
+    /**
+     * 当碰撞产生的时候调用
+     * @param  {Collider} other 产生碰撞的另一个碰撞组件
+     * @param  {Collider} self  产生碰撞的自身的碰撞组件
+     */
+    onCollisionEnter: function (other, self) {
+
+        var lifeSc = other.node.getComponent(life);   // 获取被碰撞节点的life类型的组件，如果有这种类型的组件则返回引用到life，否则life为null
+
+        if (lifeSc) {
+            // life类型组件不为空，说明当前角色player碰上的是一个有生命的物体——敌对生物
+            // 不可向other所在方向移动
+            if (self.node.x < other.node.x) {
+                // 对方在我方的右边，禁止继续向右行走
+                this.stop2right = true;
+                this.stop2left = false;
+            }
+            else {
+                // 对方在我方的左边，禁止继续向左行走
+                this.stop2left = true;
+                this.stop2right = false;
+            }
+        }
+        else {
+            // TODO：说明碰上的节点没有什么，可能是物体节点（block为根类型的节点）也可能是敌人的攻击魔法节点，因该进一步分析，但由于这里是demo没有涉及过多的障碍物因此省去进一步的判定
+            // 如果碰到物体则在这里写逻辑
+
+            // 如果受到敌人的伤害，则受伤逻辑会由作为伤害来源节点的other来调用本逻辑控制组件作为life子组件中的hurted()方法，因此这里无需做任何事情
+        }
+
+    },
+
+    /**
+     * 当碰撞结束后调用
+     * @param  {Collider} other 产生碰撞的另一个碰撞组件
+     * @param  {Collider} self  产生碰撞的自身的碰撞组件
+     */
+    onCollisionExit: function (other, self) {
+
+        // 恢复向other的功能
+        this.stop2left = false;
+        this.stop2right = false;
+    },
+
 
 
     // ==================================帧绘制任务功能==================================
