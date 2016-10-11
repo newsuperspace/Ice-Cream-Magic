@@ -78,8 +78,6 @@ cc.Class({
 
         // 将位置坐标转换为父节点foe节点的坐标系的坐标
         var pos = this.node.parent.convertToNodeSpaceAR(position);
-        cc.log('fall技能start修正坐标：' + pos.x + ',' + pos.y);
-
 
         // 设置魔法集合体的初始位置
         // this.node.setPosition(pos.x, cc.director.getVisibleSize().height / 2); 
@@ -92,9 +90,6 @@ cc.Class({
 
     // 测试按钮回调方法
     play: function () {
-        this.node.active = false;
-        this.node.active = true;
-
         this.node.getComponent(cc.Animation).play(this.anims[3]);
         cc.log('play了');
     },
@@ -108,16 +103,13 @@ cc.Class({
 
         var manager = this.player.getComponent('PoolManager');
         manager.backNode(enumType.playerMagicType.fall, this.node);
-
-        this.node.active = false;
-        this.node.parent = null;
     },
 
 
     // 监控是否因该返回到对象池中去了
     update: function (dt) {
 
-        cc.log('fall位置变化：' + this.node.x + ',' + this.node.y);
+        // cc.log('fall位置变化：' + this.node.x + ',' + this.node.y);
 
         if (!this.blue.active && !this.green.active && !this.yellow.active) {
 

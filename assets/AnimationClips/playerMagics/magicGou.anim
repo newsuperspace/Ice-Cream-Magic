@@ -1,0 +1,101 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "magicGou",
+  "_objFlags": 0,
+  "_rawFiles": null,
+  "_duration": 1.3,
+  "sample": 10,
+  "speed": 1,
+  "wrapMode": 1,
+  "curveData": {
+    "props": {
+      "rotation": [
+        {
+          "frame": 0,
+          "value": 0
+        },
+        {
+          "frame": 1,
+          "value": -720
+        },
+        {
+          "frame": 1.3,
+          "value": -1440
+        }
+      ]
+    },
+    "paths": {
+      "blue/blueGou": {
+        "props": {
+          "y": [
+            {
+              "frame": 0,
+              "value": 60
+            },
+            {
+              "frame": 1,
+              "value": 10
+            }
+          ]
+        }
+      },
+      "green/greenGou": {
+        "props": {
+          "y": [
+            {
+              "frame": 0,
+              "value": 60
+            },
+            {
+              "frame": 1,
+              "value": 10
+            }
+          ]
+        }
+      },
+      "yellow/yellowGou": {
+        "props": {
+          "y": [
+            {
+              "frame": 0,
+              "value": 60
+            },
+            {
+              "frame": 1,
+              "value": 10
+            }
+          ]
+        }
+      },
+      "blue": {
+        "props": {}
+      },
+      "green": {
+        "props": {}
+      },
+      "yellow": {
+        "props": {}
+      },
+      "core": {
+        "props": {
+          "active": [
+            {
+              "frame": 1.1,
+              "value": true
+            }
+          ]
+        }
+      }
+    },
+    "comps": {
+      "cc.Sprite": {}
+    }
+  },
+  "events": [
+    {
+      "frame": 1.3,
+      "func": "hideGouRoot",
+      "params": []
+    }
+  ]
+}
