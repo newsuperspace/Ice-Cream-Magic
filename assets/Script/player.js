@@ -297,11 +297,11 @@ cc.Class({
         }
 
         var manager = this.node.getComponent('PoolManager');
-        // var node = manager.requestNode(EnumType.playerMagicType.fall);  // 从特定的对象池中取得魔法实例对象节点
-        var prefab = manager.Pools[2].prefab
-        var node =  cc.instantiate(prefab);
-        node.active = true;
-        node.parent = this.node.parent;
+        var node = manager.requestNode(EnumType.playerMagicType.fall);  // 从特定的对象池中取得魔法实例对象节点
+        // var prefab = manager.Pools[2].prefab
+        // var node =  cc.instantiate(prefab);
+        // node.active = true;
+        // node.parent = this.node.parent;
 
 
         // 发射魔法的时候player人物要朝向敌人的方向

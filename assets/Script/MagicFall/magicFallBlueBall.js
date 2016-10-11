@@ -4,11 +4,16 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-
+        atlas: {
+            default: null,
+            type: cc.SpriteAtlas
+        }
     },
 
     // use this for initialization
     onLoad: function () {
+        // cc.log('blueBall初始化');
+        // this.node.getComponent(cc.Sprite).spriteFrame = this.atlas.getSpriteFrame('blueLIE1');
     },
 
 
@@ -19,6 +24,7 @@ cc.Class({
  */
     onCollisionEnter: function (other, self) {
 
+        cc.log('blueBall发生了碰撞');
         var script = other.node.getComponent(life);   // 父类引用，指向子类对象
 
         if (script) {
@@ -33,6 +39,8 @@ cc.Class({
         self.node.parent.getComponent(cc.Animation).play('magicFallBlue');  // 得到父节点blue上的动画组件，并调用其上的动画
 
     },
+
+    
 
     // called every frame, uncomment this function to activate update callback
     // update: function (dt) {

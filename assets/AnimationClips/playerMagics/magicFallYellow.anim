@@ -3,21 +3,14 @@
   "_name": "magicFallYellow",
   "_objFlags": 0,
   "_rawFiles": null,
-  "_duration": 0.3,
+  "_duration": 0.4,
   "sample": 10,
   "speed": 1,
   "wrapMode": 1,
   "curveData": {
     "paths": {
       "yellowTail": {
-        "props": {
-          "active": [
-            {
-              "frame": 0,
-              "value": false
-            }
-          ]
-        },
+        "props": {},
         "comps": {
           "cc.Sprite": {}
         }
@@ -47,16 +40,15 @@
             ]
           }
         },
-        "props": {
-          "active": [
-            {
-              "frame": 0.3,
-              "value": false
-            }
-          ]
-        }
+        "props": {}
       }
     }
   },
-  "events": []
+  "events": [
+    {
+      "frame": 0.4,
+      "func": "disappear",
+      "params": []
+    }
+  ]
 }

@@ -28,9 +28,9 @@ cc.Class({
         var manager = cc.director.getCollisionManager();
         manager.enabled = true;
 
-        this.blue = cc.find('fallRoot/blue/blueBall', this.node);
-        this.green = cc.find('fallRoot/green/greenBall', this.node);
-        this.yellow = cc.find('fallRoot/yellow/yellowBall', this.node);
+        this.blue = cc.find('fallRoot/blue', this.node);
+        this.green = cc.find('fallRoot/green', this.node);
+        this.yellow = cc.find('fallRoot/yellow', this.node);
 
         this.player = cc.find('Canvas/rootCanvas/foe/player');   // 查找到角色player节点对象
 
@@ -106,8 +106,8 @@ cc.Class({
 
         cc.log('fall技能回收了');
 
-        // var manager = this.player.getComponent('PoolManager');
-        // manager.backNode(enumType.playerMagicType.fall, this.node);
+        var manager = this.player.getComponent('PoolManager');
+        manager.backNode(enumType.playerMagicType.fall, this.node);
 
         this.node.active = false;
         this.node.parent = null;
@@ -120,6 +120,9 @@ cc.Class({
         cc.log('fall位置变化：' + this.node.x + ',' + this.node.y);
 
         if (!this.blue.active && !this.green.active && !this.yellow.active) {
+
+            cc.find('Canvas/rootCanvas').getComponent(cc.Animation).play('shock');
+
             this.recycle();
         }
     },

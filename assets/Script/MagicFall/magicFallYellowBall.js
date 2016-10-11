@@ -19,6 +19,7 @@ cc.Class({
  */
     onCollisionEnter: function (other, self) {
 
+        cc.log('YellowBall发生了碰撞');
         var script = other.node.getComponent(life);    // 父类引用指向子类对象
 
         if (script) {
@@ -32,10 +33,7 @@ cc.Class({
 
     },
 
-    disappear: function(){
-        this.node.active = false;
-        cc.log('消失了');
-    },
+    
 
     // called every frame, uncomment this function to activate update callback
     // update: function (dt) {
