@@ -1,3 +1,6 @@
+// 游戏单点触碰的操作逻辑，目前不使用，因为我希望游戏支持的是由脚本GameUI4MultiTouch提供的多点触触碰
+// 但目前桌面H5不支持多点触碰，原生H5支持多点触碰，原生平台也应该支持多点触碰
+// 如果需要替换操作为单点触碰，可以在Game节点上将GameUI4MultiTouch替换为本脚本组件。
 cc.Class({
     extends: cc.Component,
 

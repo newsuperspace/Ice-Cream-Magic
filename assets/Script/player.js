@@ -16,6 +16,63 @@ cc.Class({
             type: cc.Integer
         },
 
+        // 冰棍耐久
+        iceDuringValue: {
+            default: 100,
+            max: 100,
+            min: 0,
+            type: cc.Integer,
+            tooltip: '玩家冰棍的耐久度，会随着时间而自动消减'
+        },
+
+        thirsty2iceDuringValue: {
+            default: 10,
+            max: 100,
+            min: 0,
+            tooltip: '当口渴值达到100后会自动削减这一数值的冰棍耐久来缓解50点口渴值'
+        },
+
+        // 口渴值---------也就是生命值，如果达到100会自动削减10点冰棍耐久，之后口渴值会立即减少50点
+        // 而如果口渴值达到100后冰棍已经没有剩余了，则就会“渴死”游戏结束
+        thirstyValue: {
+            default: 0,
+            max: 100,
+            min: 0,
+            type: cc.Integer,
+            tooltip: '口渴值，每次吟唱魔法攻击的时候都会增加这个数值条'
+        },
+
+        // 冰棍消融速度ms
+        iceDecreaseSpeed: {
+            default: 2000,   // 每2000ms（2s）就削减iceDuringValue的1点
+            type: cc.Integer
+        },
+
+        // 口渴值消退比率ms
+        thirstyDecreaseSpeed: {
+            default: 1000,    // 每一秒就消退一点的thirstyValue的数值 
+            type: cc.Integer
+        },
+
+        // bullet口渴值增加率
+        bulletIncreaseValue: {
+            default: 2,    // 每次发射飞弹都增加二点口渴
+            type: cc.Integer
+        },
+
+        // fall口渴值增加律
+        fallIncreaseValue: {
+            default: 40,     // 每次发射fall增加40点口渴值
+            type: cc.Integer
+        },
+
+        // gou口渴值增加律
+        gouIncreaseValue: {
+            default: 20,      // 每次使用gou增加20点口渴
+            type: cc.Integer
+        },
+
+
 
         // ----------------------各个技能的CD时间-------------------------
         magicBulletCD: {
@@ -55,9 +112,11 @@ cc.Class({
     // use this for initialization
     onLoad: function () {
 
+        this.iceDecreaseTimeAccumulate = 0;
+        this.thirstyDecreaseTimeAccumulate = 0;
+
         this.stop2left = false;
         this.stop2right = false;
-
 
         // 初始化对象池管理器，管理器会自动批量初始化其所管理的所有对象池，为对象池中对象的存取做好准备
         this.node.getComponent('PoolManager').init();
@@ -296,6 +355,20 @@ cc.Class({
         this.magicBulletPrepareTime = 0;
         // 硬质时间归0
         this.passedBulletStiffTime = 0;
+
+
+        // ----------------处理口渴度-----------------
+        this.thirstyValue += this.bulletIncreaseValue;
+        if (this.thirstyValue >= 100) {
+            this.iceDuringValue -= this.thirsty2iceDuringValue;
+            if (this.iceDuringValue < 0) {
+                this.iceDuringValue = 0;
+            }
+            else {
+                this.thirstyValue -= 50;
+            }
+        }
+
     },
 
     // ======================================magicFall====================================
@@ -330,9 +403,21 @@ cc.Class({
         // 硬质时间归0
         this.passedFallStiffTime = 0;
 
+        // ----------------处理口渴度-----------------
+        this.thirstyValue += this.fallIncreaseValue;
+        if (this.thirstyValue >= 100) {
+            this.iceDuringValue -= this.thirsty2iceDuringValue;
+            if (this.iceDuringValue < 0) {
+                this.iceDuringValue = 0;
+            }
+            else {
+                this.thirstyValue -= 50;
+            }
+        }
+
     },
 
-    // ======================================magicGouCD====================================
+    // ======================================magicGou====================================
     // parameter: foe's position (archor = (0.5,0.5))
     gouing: function (position) {
 
@@ -359,6 +444,18 @@ cc.Class({
         this.magicGouPrepareTime = 0;
         // 硬质时间归0
         this.passedGouStiffTime = 0;
+
+        // ----------------处理口渴度-----------------
+        this.thirstyValue += this.gouIncreaseValue;
+        if (this.thirstyValue >= 100) {
+            this.iceDuringValue -= this.thirsty2iceDuringValue;
+            if (this.iceDuringValue < 0) {
+                this.iceDuringValue = 0;
+            }
+            else {
+                this.thirstyValue -= 50;
+            }
+        }
     },
 
     // ==================================碰撞检测功能相关==================================
@@ -475,6 +572,28 @@ cc.Class({
                 this.passedFallStiffTime = this.fallStiffTime;
             }
         }
+
+        //----------------------------- 更新口渴值和冰棍耐久值-------------------------------
+        // 随时间流逝融化冰棍
+        this.iceDecreaseTimeAccumulate += dt * 1000;
+        if (this.iceDecreaseTimeAccumulate >= this.iceDecreaseSpeed) {
+            this.iceDecreaseTimeAccumulate -= this.iceDecreaseSpeed;
+            this.iceDuringValue -= 1;
+
+        }
+
+        // 随时间流逝减少口渴感
+        this.thirstyDecreaseTimeAccumulate += dt * 1000;
+        if (this.thirstyDecreaseTimeAccumulate >= this.thirstyDecreaseSpeed) {
+            this.thirstyDecreaseTimeAccumulate -= this.thirstyDecreaseSpeed;
+            this.thirstyValue -= 1;
+            // 因该判断死亡，但这个任务我交给了Game层的GameControl在update中巡视
+            if (this.thirstyValue < 0) {
+                this.thirstyValue = 0;
+            }
+        }
+
+
 
     },
 });

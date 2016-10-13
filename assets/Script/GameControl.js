@@ -30,6 +30,11 @@ cc.Class({
             type:cc.Node
         },
 
+        barUI: {
+            default: null,
+            type: cc.Node
+        },
+
         // -----------------下面三个属性与碰撞检测相关--------------------
         openCollision:{        // 是否开启碰撞检测功能
             default: true,
@@ -42,7 +47,7 @@ cc.Class({
         }
     },
 
-    // use this for initialization
+    // ======================================脚本初始化==========================================
     onLoad: function () {
 
         // -----------------------------------碰撞检测相关控制---------------------------------------
@@ -98,7 +103,7 @@ cc.Class({
 
     },
 
-    // 滚动地面和背景的逻辑
+    // ===============================================滚动地面和背景的逻辑===============================================
     scroll: function (dt) {
 
         var playerScript = this.player.getComponent('player');
@@ -143,7 +148,7 @@ cc.Class({
     },
 
 
-    // 同步player组件中的moveType属性和当前脚本的moveType属性相一致
+    // ===========================同步player组件中的moveType属性和当前脚本的moveType属性相一致=================================
     changeAndSyncMoveType: function () {
         if (EnumType.MoveType.walk == this.moveType) {
             // 当前为行走模式，将要改为攻击模式
@@ -156,8 +161,17 @@ cc.Class({
         this.player.getComponent('player').moveType = this.moveType;
     },
 
-    update: function (dt) {
+    // ======================================游戏结束的控制逻辑=========================================
+    GameOver: function(){
+        // 游戏结束逻辑
+        cc.find('title',this.Node).string = '你渴死了';
+    },
 
+
+    update: function (dt) {
+        var playerScript = this.player.getComponent('player');
+
+        // ----------------------判断是否到达了刷敌人点，如果是则,更换moveType，并执行刷敌逻辑----------------------
         if (!this.showFoe) {
             // 如果当前showFoe为不刷敌状态，则判断当前是否符合刷敌的条件，并更改this.showFoe为true
             if (false) {
@@ -167,9 +181,6 @@ cc.Class({
             }
         }
 
-        var playerScript = this.player.getComponent('player');
-
-        // 判断是否到达了刷敌人点，如果是则,更换moveType，并执行刷敌逻辑
         if (this.showFoe) {
             // 执行刷敌逻辑，并随时判断这一波敌人是否被消灭完全了，然后重置showFoe为false
 
@@ -187,7 +198,21 @@ cc.Class({
         }
 
 
-        
+
+        // ----------------------实时更新口渴值和冰棍耐久的UI显示信息----------------------
+        var barScript = this.barUI.getComponent('bar');
+        var iceValue = playerScript.iceDuringValue / 100;
+        var thirstyValue = playerScript.thirstyValue / 100;
+
+        barScript.setIceDuring(iceValue);
+        barScript.setThirsty(thirstyValue);
+
+
+        // ----------------------判定玩家是否死亡-----------------------
+        if(this.player.thirstyValue == 100 && this.player.iceDuringValue == 0)
+        {
+            this.GameOver();   // 玩家死亡，游戏结束
+        }
 
     },
 });
