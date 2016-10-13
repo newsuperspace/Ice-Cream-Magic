@@ -32,14 +32,6 @@ cc.Class({
         this.green = cc.find('fallRoot/green', this.node);
         this.yellow = cc.find('fallRoot/yellow', this.node);
 
-        this.player = cc.find('Canvas/rootCanvas/foe/player');   // 查找到角色player节点对象
-
-        this.anims = ['magicFallStart', 'magicFallChange', 'magicFallStill', 'magicFallDown'];
-
-        this.activeAllNodes();
-    },
-
-    activeAllNodes: function () {
         // 保证所有节点都被激活
         for (var i = 0; i < this.node.children[0].children.length; i++) {
             let child = this.node.children[0].children[i];
@@ -49,9 +41,11 @@ cc.Class({
                 child.children[j].active = true;
             }
         }
+
+        this.player = cc.find('Canvas/rootCanvas/foe/player');   // 查找到角色player节点对象
+
+        this.anims = ['magicFallStart', 'magicFallChange', 'magicFallStill', 'magicFallDown'];
     },
-
-
 
     // ==================================播放子节点rootFall上的形态改变动画=====================================
     playStart: function () {
@@ -75,6 +69,8 @@ cc.Class({
     magicFallStart: function (position) {
 
         cc.log('magicFallStart已经开动了');
+
+        this.onLoad();
 
         // 将位置坐标转换为父节点foe节点的坐标系的坐标
         var pos = this.node.parent.convertToNodeSpaceAR(position);

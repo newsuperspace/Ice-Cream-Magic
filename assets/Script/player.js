@@ -166,7 +166,7 @@ cc.Class({
         {
             this.node.scaleX = Math.abs(this.node.scaleX);  // 图片方向向右
 
-            if(this.stop2right)    // 右边有敌人，不能继续向右移动位置
+            if (this.stop2right)    // 右边有敌人，不能继续向右移动位置
                 return;
 
             var distance = dt * this.playerSpeed;
@@ -188,7 +188,7 @@ cc.Class({
 
             this.node.scaleX = -Math.abs(this.node.scaleX); // 图片方向向左
 
-            if(this.stop2left)    // 左边有敌人，不能继续向左移动位置
+            if (this.stop2left)    // 左边有敌人，不能继续向左移动位置
                 return;
 
             var distance = dt * this.playerSpeed;
@@ -267,7 +267,7 @@ cc.Class({
     },
 
 
-    // ========================================射蛋========================================
+    // ========================================magicBullet========================================
     // 射击魔法飞弹————射出去后就不用管了，飞弹的逻辑控制组件会自动完成效果和资源回收等工作。因此较发射后不管
     shooting: function (position) {
 
@@ -322,7 +322,6 @@ cc.Class({
             this.node.scaleX = -Math.abs(this.node.scaleX); //  人物图片脸部向左
         }
 
-        node.getComponent('magicFall').activeAllNodes();
         // 发射魔法效果，前提条件仅仅是给出下落的位置坐标即可
         node.getComponent('magicFall').magicFallStart(position);
 
@@ -331,6 +330,35 @@ cc.Class({
         // 硬质时间归0
         this.passedFallStiffTime = 0;
 
+    },
+
+    // ======================================magicGouCD====================================
+    // parameter: foe's position (archor = (0.5,0.5))
+    gouing: function (position) {
+
+        if (this.magicGouPrepareTime != this.magicGouCD) {
+            // 如果冷却时间累积计量不足规定技能CD时间，则直接退出
+            return;
+        }
+
+        var manager = this.node.getComponent('PoolManager');
+        var node = manager.requestNode(EnumType.playerMagicType.gou);  // 从特定的对象池中取得魔法实例对象节点
+
+        // 发射魔法的时候player人物要朝向敌人的方向
+        if (position.x > this.node.x) {
+            this.node.scaleX = Math.abs(this.node.scaleX);  // 人物图片脸部向右
+        }
+        else {
+            this.node.scaleX = -Math.abs(this.node.scaleX); //  人物图片脸部向左
+        }
+
+        // 发射魔法效果，前提条件仅仅是给出下落的位置坐标即可
+        node.getComponent('magicGou').magicGouStart(position);
+
+        // 技能释放完成后，清空冷却事件累计变量为0
+        this.magicGouPrepareTime = 0;
+        // 硬质时间归0
+        this.passedGouStiffTime = 0;
     },
 
     // ==================================碰撞检测功能相关==================================
@@ -447,8 +475,6 @@ cc.Class({
                 this.passedFallStiffTime = this.fallStiffTime;
             }
         }
-
-
 
     },
 });

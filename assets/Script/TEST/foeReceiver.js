@@ -27,7 +27,6 @@ cc.Class({
     // 然后进一步筛选
     update: function (dt) {
 
-
         // ----------------------------魔法飞弹技能发动条件的巡视逻辑--------------------------
 
         var nodes = [];   // 作为参数备用
@@ -75,7 +74,14 @@ cc.Class({
             broadcast.skill1AttackPosition = null;
         }
         
-
+        // 技能2 攻击位置存在 且 技能CD完成，则可以发动技能
+        if(broadcast.skill2AttackPosition && 1 == broadcast.skill2CDPercent){
+            playerScript.gouing(broadcast.skill2AttackPosition);
+            broadcast.skill2AttackPosition = null;
+        }
+        else{
+            broadcast.skill2AttackPosition = null;
+        }
 
 
     },

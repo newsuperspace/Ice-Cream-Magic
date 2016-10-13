@@ -50,8 +50,9 @@ cc.Class({
     update: function (dt) {
 
         var skill1Script = this.skill1.getComponent('skill1');
+        var skill2Script = this.skill2.getComponent('skill2');
 
-        // 调控 skill1节点   
+        // 调控 skill1节点 的冷却表现
         if(1 != broadcast.skill1CDPercent)    // 技能冷却的逻辑
         {
             cc.log('fall进行技能冷却');
@@ -74,7 +75,7 @@ cc.Class({
             }
 
             skill1Script.black.getComponent(cc.ProgressBar).progress = 1 - broadcast.skill1CDPercent
-            cc.log('fall技能冷却剩余百分比：'+Math.floor(skill1Script.black.getComponent(cc.ProgressBar).progress*100));
+            // cc.log('fall技能冷却剩余百分比：'+Math.floor(skill1Script.black.getComponent(cc.ProgressBar).progress*100));
         }
         else{   // 技能正常使用状态的维持判定
 
@@ -98,6 +99,52 @@ cc.Class({
 
         }
 
+
+        // 调控 skill2节点 的冷却表现
+        if(1 != broadcast.skill2CDPercent)    // 技能冷却的逻辑
+        {
+            cc.log('gou进行技能冷却');
+            // 关闭skill2节点的事件监听器
+            if(skill2Script.listenerOpened)
+            {
+                skill2Script.logout();
+            }
+
+            // 激活gray产生技能图标的遮蔽效果
+            if(!skill2Script.gray.active)
+            {
+                skill2Script.gray.active = true;
+            }
+
+            // 激活black用作技能的冷却CD的读条的动态效果
+            if(!skill2Script.black.active)
+            {
+                skill2Script.black.active = true;
+            }
+
+            skill2Script.black.getComponent(cc.ProgressBar).progress = 1 - broadcast.skill2CDPercent
+            // cc.log('fall技能冷却剩余百分比：'+Math.floor(skill1Script.black.getComponent(cc.ProgressBar).progress*100));
+        }
+        else{   // 技能正常使用状态的维持判定
+
+            // 保持skill2节点的事件监听器的开启
+            if(!skill2Script.listenerOpened)
+            {
+                skill2Script.register();   // 重新允许节点skill2接受点击事件
+            }
+
+            // gray保持隐藏状态
+            if(skill2Script.gray.active)
+            {
+                skill2Script.gray.active = false;
+            }
+
+            // black保持隐藏状态
+            if(skill2Script.black.active)
+            {
+                skill2Script.black.active = false;
+            }
+        }
 
 
 

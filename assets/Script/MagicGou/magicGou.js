@@ -26,12 +26,14 @@ cc.Class({
 
     // 向指定位置发动魔法
     magicGouStart: function (position) {
+
         cc.log('magicGouStart已经开动了');
 
-        var pos = this.node.parent.convertToNodeSpaceAR(position);
+        this.onLoad();
+
+        var pos = position;
 
         // 设置魔法集合体的初始位置
-        // this.node.setPosition(pos.x, cc.director.getVisibleSize().height / 2); 
         this.node.x = pos.x;
         this.node.y = pos.y;
 
@@ -64,7 +66,7 @@ cc.Class({
 
         if (!this.gouRoot.active) {
             // 讲当前gou魔法节点回收到player指定的对象池中去，以备下次重复利用
-            // this.recycle();
+            this.recycle();
         }
 
     },

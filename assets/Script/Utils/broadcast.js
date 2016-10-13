@@ -62,8 +62,6 @@ var broadcast = cc.Class({
         },
 
 
-
-
         // 参数nodes是一个数组，其元素类型是在脚本foeReceiver中定义的名为nodeAndFoeMotherTypeComponent类型
         hasTouchedOneChildNode: function( nodes ){     // 这个方法会被foe层面的update轮番调用，foe会将他之下的所有敌人节点放入到数组nodes中传递进来
             // 遍历clickPoints数组中的每个点击点，判断是否有位于nodes中的节点的范围框内的，如果有就出发这个node的发射魔法飞弹的逻辑，当所有nodes判断完后
