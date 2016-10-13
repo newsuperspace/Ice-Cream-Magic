@@ -29,11 +29,13 @@ cc.Class({
     },
 
     setIceDuring: function(param){
-        this.blueBar4Ice.progress = param;
+        cc.log('冰棍耐久：'+param)
+        this.blueBar4Ice.getComponent(cc.ProgressBar).progress = param;
     },
 
     setThirsty: function(param){
-        this.redBar4Thirsty.progress = param;
+        cc.log('口渴值：'+param);
+        this.redBar4Thirsty.getComponent(cc.ProgressBar).progress = param;
     }
 
     // called every frame, uncomment this function to activate update callback

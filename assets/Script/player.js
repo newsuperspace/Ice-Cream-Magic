@@ -44,7 +44,7 @@ cc.Class({
 
         // 冰棍消融速度ms
         iceDecreaseSpeed: {
-            default: 2000,   // 每2000ms（2s）就削减iceDuringValue的1点
+            default: 3000,   // 每2000ms（2s）就削减iceDuringValue的1点
             type: cc.Integer
         },
 
@@ -360,12 +360,13 @@ cc.Class({
         // ----------------处理口渴度-----------------
         this.thirstyValue += this.bulletIncreaseValue;
         if (this.thirstyValue >= 100) {
-            this.iceDuringValue -= this.thirsty2iceDuringValue;
-            if (this.iceDuringValue < 0) {
-                this.iceDuringValue = 0;
-            }
-            else {
+            if (this.iceDuringValue >= this.thirsty2iceDuringValue) {
+                this.iceDuringValue -= this.thirsty2iceDuringValue;
                 this.thirstyValue -= 50;
+            }
+            else if(this.iceDuringValue > 0) {
+                this.iceDuringValue = 0;
+                this.thirstyValue -= 20;
             }
         }
 
@@ -406,12 +407,13 @@ cc.Class({
         // ----------------处理口渴度-----------------
         this.thirstyValue += this.fallIncreaseValue;
         if (this.thirstyValue >= 100) {
-            this.iceDuringValue -= this.thirsty2iceDuringValue;
-            if (this.iceDuringValue < 0) {
-                this.iceDuringValue = 0;
-            }
-            else {
+            if (this.iceDuringValue >= this.thirsty2iceDuringValue) {
+                this.iceDuringValue -= this.thirsty2iceDuringValue;
                 this.thirstyValue -= 50;
+            }
+            else if(this.iceDuringValue > 0) {
+                this.iceDuringValue = 0;
+                this.thirstyValue -= 20;
             }
         }
 
@@ -448,14 +450,16 @@ cc.Class({
         // ----------------处理口渴度-----------------
         this.thirstyValue += this.gouIncreaseValue;
         if (this.thirstyValue >= 100) {
-            this.iceDuringValue -= this.thirsty2iceDuringValue;
-            if (this.iceDuringValue < 0) {
-                this.iceDuringValue = 0;
-            }
-            else {
+            if (this.iceDuringValue >= this.thirsty2iceDuringValue) {
+                this.iceDuringValue -= this.thirsty2iceDuringValue;
                 this.thirstyValue -= 50;
             }
+            else if(this.iceDuringValue > 0) {
+                this.iceDuringValue = 0;
+                this.thirstyValue -= 20;
+            }
         }
+
     },
 
     // ==================================碰撞检测功能相关==================================
@@ -579,7 +583,9 @@ cc.Class({
         if (this.iceDecreaseTimeAccumulate >= this.iceDecreaseSpeed) {
             this.iceDecreaseTimeAccumulate -= this.iceDecreaseSpeed;
             this.iceDuringValue -= 1;
-
+            if (this.iceDuringValue < 0) {
+                this.iceDuringValue = 0;
+            }
         }
 
         // 随时间流逝减少口渴感

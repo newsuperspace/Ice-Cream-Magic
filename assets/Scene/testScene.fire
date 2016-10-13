@@ -1614,7 +1614,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 54.300000000000004,
+      "width": 0,
       "height": 20
     },
     "_children": [],
@@ -1685,7 +1685,7 @@
     },
     "_N$mode": 0,
     "_N$totalLength": 543,
-    "_N$progress": 0.1,
+    "_N$progress": 0,
     "_N$reverse": false
   },
   {
@@ -1722,8 +1722,12 @@
       "__id__": 34
     },
     "_enabled": true,
-    "blueBar4Ice": null,
-    "redBar4Thirsty": null
+    "blueBar4Ice": {
+      "__id__": 36
+    },
+    "redBar4Thirsty": {
+      "__id__": 41
+    }
   },
   {
     "__type__": "cc.Node",

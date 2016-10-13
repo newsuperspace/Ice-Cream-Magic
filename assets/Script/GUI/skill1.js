@@ -164,7 +164,6 @@ cc.Class({
                     this.showing.setPosition(this.position);
                 }
             }
-
         }
         else {   // 没按下
             return;

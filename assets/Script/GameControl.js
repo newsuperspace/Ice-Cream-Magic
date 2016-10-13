@@ -164,7 +164,7 @@ cc.Class({
     // ======================================游戏结束的控制逻辑=========================================
     GameOver: function(){
         // 游戏结束逻辑
-        cc.find('title',this.Node).string = '你渴死了';
+        cc.find('title',this.node).getComponent(cc.Label).string = '你渴死了';
     },
 
 
@@ -209,7 +209,7 @@ cc.Class({
 
 
         // ----------------------判定玩家是否死亡-----------------------
-        if(this.player.thirstyValue == 100 && this.player.iceDuringValue == 0)
+        if(playerScript.thirstyValue >= 100 && playerScript.iceDuringValue <= 0)
         {
             this.GameOver();   // 玩家死亡，游戏结束
         }
