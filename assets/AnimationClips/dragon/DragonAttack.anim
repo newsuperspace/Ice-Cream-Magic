@@ -1,0 +1,61 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "DragonAttack",
+  "_objFlags": 0,
+  "_rawFiles": null,
+  "_duration": 0.4,
+  "sample": 10,
+  "speed": 1,
+  "wrapMode": 1,
+  "curveData": {
+    "comps": {
+      "cc.Sprite": {
+        "spriteFrame": [
+          {
+            "frame": 0,
+            "value": {
+              "__uuid__": "e60a450d-4ccd-4b01-8df7-f70b33fa4207"
+            }
+          },
+          {
+            "frame": 0.1,
+            "value": {
+              "__uuid__": "6d5b5b8d-1517-44e3-aa67-40d13db0dc85"
+            }
+          },
+          {
+            "frame": 0.2,
+            "value": {
+              "__uuid__": "c616ba74-89f5-4c9d-a3de-f4b6d835e9f2"
+            }
+          },
+          {
+            "frame": 0.3,
+            "value": {
+              "__uuid__": "e60a450d-4ccd-4b01-8df7-f70b33fa4207"
+            }
+          }
+        ]
+      }
+    },
+    "props": {
+      "x": [
+        {
+          "frame": 0,
+          "value": 0
+        },
+        {
+          "frame": 0.3,
+          "value": 60
+        }
+      ]
+    }
+  },
+  "events": [
+    {
+      "frame": 0.2,
+      "func": "attack",
+      "params": []
+    }
+  ]
+}
