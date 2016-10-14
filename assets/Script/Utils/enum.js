@@ -20,18 +20,27 @@ var FoeDifficulty = cc.Enum({
 });
 
 
-// 敌人种类
+//==================================================
+
+// 敌人种类 ——对应 PoolMngType.foeType
 var FoeType = cc.Enum({
     fireDragon: -1
 });
 
-// 玩家的魔法类型
+// 玩家的魔法类型 ——对应 PoolMngType.playerMagic
 var playerMagicType = cc.Enum({
     bullet: -1,   //index = 0
     gou: -1,      // index = 1
     fall: -1        // index = 2
 });
 
+// 敌人魔法类型 ——对应 PoolMngType.foeMagic
+var FoeMagicType = cc.Enum({
+    fireWall: -1,     // 0 防御性魔法 火墙
+    firePillar: -1,   // 1 火柱
+    fireFall: -1,       // 2 火焰下坠
+    fireCircle: -1    // 3 普通攻击 火环
+});
 
 // 对象池管理器所管理的对象池的类型
 var PoolMngType = cc.Enum({
@@ -52,5 +61,6 @@ module.exports = {
     FoeDifficulty,
     playerMagicType,
     PoolMngType,
+    FoeMagicType,
     
 }

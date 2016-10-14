@@ -278,7 +278,6 @@ cc.Class({
     },
 
 
-
     // =====================================跳跃========================================
     // touchType存放着关于操作的一切信息； GameUI所使用的玩家输入操作控制脚本实例对象
     // 本方法是由GameUI脚本组件直接调用的
@@ -326,6 +325,15 @@ cc.Class({
     },
 
 
+    // 当前player组件的这个hurted方法，将会覆盖基类life上的hurted方法，因为玩家角色的受到攻击后的扣血方式与其他生命体有不同的逻辑
+    // 玩家受到攻击会会由于魔法的保护而不会受到伤害，但是会大幅度增加口渴值。
+    hurted: function (damage) {
+        this.thirstyValue += damage*0.5;
+        cc.log('玩家受到伤害：');
+        this.redFlash();   // 这个redFlash红闪方法是调用基类life中
+    },
+
+
     // ========================================magicBullet========================================
     // 射击魔法飞弹————射出去后就不用管了，飞弹的逻辑控制组件会自动完成效果和资源回收等工作。因此较发射后不管
     shooting: function (position) {
@@ -364,7 +372,7 @@ cc.Class({
                 this.iceDuringValue -= this.thirsty2iceDuringValue;
                 this.thirstyValue -= 50;
             }
-            else if(this.iceDuringValue > 0) {
+            else if (this.iceDuringValue > 0) {
                 this.iceDuringValue = 0;
                 this.thirstyValue -= 20;
             }
@@ -411,7 +419,7 @@ cc.Class({
                 this.iceDuringValue -= this.thirsty2iceDuringValue;
                 this.thirstyValue -= 50;
             }
-            else if(this.iceDuringValue > 0) {
+            else if (this.iceDuringValue > 0) {
                 this.iceDuringValue = 0;
                 this.thirstyValue -= 20;
             }
@@ -454,7 +462,7 @@ cc.Class({
                 this.iceDuringValue -= this.thirsty2iceDuringValue;
                 this.thirstyValue -= 50;
             }
-            else if(this.iceDuringValue > 0) {
+            else if (this.iceDuringValue > 0) {
                 this.iceDuringValue = 0;
                 this.thirstyValue -= 20;
             }
