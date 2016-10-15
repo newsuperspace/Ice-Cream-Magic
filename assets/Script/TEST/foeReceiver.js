@@ -29,7 +29,7 @@ cc.Class({
 
         // ----------------------------魔法飞弹技能发动条件的巡视逻辑--------------------------
 
-        var nodes = [];   // 作为参数备用
+        var nodes = [];   // 作为调用braodcast模块中的hasTouchedOneChildNode()方法的参数备用
 
         var children  = this.node.children;  // 获得所有子节点
         // cc.log('子节点：'+children.length+'个');
@@ -37,13 +37,12 @@ cc.Class({
         for(var i=0; i<children.length; i++) // 遍历所有子节点获取节点上的所有组件
         {
             let node = children[i];
-            let components =  node.getComponents(FoeMother);
-            // cc.log('组件数'+components.length+'个');
-            if(components.length >0)
+            let component =  node.getComponentInChildren(FoeMother);  // 查找子节点中第一个匹配拥有FoeMother组件的节点的FoeMother组件实例
+            if(component)
             {
                 var nodeComponent  =  new nodeAndFoeMotherTypeComponent();
-                nodeComponent.node = node;
-                nodeComponent.component = components[0];
+                nodeComponent.node = node;   // 注意！ 以dragon类型foe为例子，此时的node就是dragonRoot根节点
+                nodeComponent.component = component;   // 注意！以dragon类型foe为例子，此时的component是dragonRoot子节点dragon上的dragon组件实例
 
                 nodes.push(nodeComponent);
             }

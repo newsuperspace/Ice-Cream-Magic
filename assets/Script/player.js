@@ -484,7 +484,7 @@ cc.Class({
         if (lifeSc) {
             // life类型组件不为空，说明当前角色player碰上的是一个有生命的物体——敌对生物
             // 不可向other所在方向移动
-            if (self.node.x < other.node.x) {
+            if (self.node.x < other.node.parent.x) {
                 // 对方在我方的右边，禁止继续向右行走
                 this.stop2right = true;
                 this.stop2left = false;
@@ -496,10 +496,11 @@ cc.Class({
             }
         }
         else {
-            // TODO：说明碰上的节点没有什么，可能是物体节点（block为根类型的节点）也可能是敌人的攻击魔法节点，因该进一步分析，但由于这里是demo没有涉及过多的障碍物因此省去进一步的判定
-            // 如果碰到物体则在这里写逻辑
+             // TODO：说明碰上的节点没有什么，可能是物体节点（block为根类型的节点）也可能是敌人的攻击魔法节点，因该进一步分析，但由于这里是demo没有涉及过多的障碍物因此省去进一步的判定
+                
+                // TODO：如果碰到物体则在这里写逻辑
 
-            // 如果受到敌人的伤害，则受伤逻辑会由作为伤害来源节点的other来调用本逻辑控制组件作为life子组件中的hurted()方法，因此这里无需做任何事情
+                // NOTODO:如果受到敌人的伤害，则受伤逻辑会由作为伤害来源节点的other来调用本逻辑控制组件作为life子组件中的hurted()方法，因此这里无需做任何事情
         }
 
     },
@@ -534,7 +535,7 @@ cc.Class({
                 // 如果超过了规定的CD时间，则说明技能已经准备好，将累计变量更改为CD上限就说明可以发动技能了
                 this.magicBulletPrepareTime = this.magicBulletCD;
             }
-            cc.log('ball技能冷却时间累计计量:' + this.magicBulletPrepareTime);
+            // cc.log('ball技能冷却时间累计计量:' + this.magicBulletPrepareTime);
         }
 
         if (this.magicGouPrepareTime < this.magicGouCD)  // 如果飞弹技能的冷却累计时间没有达到规定的CD事件，则

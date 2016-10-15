@@ -20,7 +20,7 @@ cc.Class({
     // use this for initialization
     onLoad: function () {
         this.health = 100;    // 默认生命值是100，之后可以在各个子脚本中自行修改
-
+        this.speed = 100;
     },
 
 

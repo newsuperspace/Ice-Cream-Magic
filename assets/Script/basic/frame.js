@@ -1,3 +1,5 @@
+
+// 用作移动位置外壳的节点所挂载的逻辑组件的基类。
 cc.Class({
     extends: cc.Component,
 
@@ -16,31 +18,11 @@ cc.Class({
 
     // use this for initialization
     onLoad: function () {
-        this.hasTouchedFoe = false;
-        this.touchedFoePosition = null;
+
     },
 
     // called every frame, uncomment this function to activate update callback
     // update: function (dt) {
 
     // },
-
-
-    onCollisionEnter: function (other, self) {
-       this.hasTouchedFoe = true;
-       this.node.opacity = 255;
-       this.touchedFoePosition = other.node.parent.position;
-    },
-  
-
-    /**
-     * 当碰撞结束后调用
-     * @param  {Collider} other 产生碰撞的另一个碰撞组件
-     * @param  {Collider} self  产生碰撞的自身的碰撞组件
-     */
-    onCollisionExit: function (other, self) {
-        this.hasTouchedFoe = false;
-        this.node.opacity = 100;
-        this.touchedFoePosition = null;
-    }
 });

@@ -73,12 +73,21 @@ var broadcast = cc.Class({
                 for(var j = 0; j<len; j++)
                 {
                     let AR = nodeComponent.node.parent.convertToNodeSpaceAR(this._clickPoints[j]);  // 将触点转换为与node相同的坐标系统
-                    let rect = nodeComponent.node.getBoundingBox();
-                    if(cc.rectContainsPoint(rect,AR))
+                    // let rect = nodeComponent.node.getBoundingBox();
+                    let width = nodeComponent.node.children[0].width;
+                    let height = nodeComponent.node.children[0].height;
+                    // if(cc.rectContainsPoint(rect,AR))
+                    // {
+                    //     cc.log('玩家射击了敌人');
+                    //     // 如果触点的位置在敌人节点的包装盒范围内则调用
+                    //     nodeComponent.component.beAttacked();
+                    // }
+                    if(AR.x < nodeComponent.node.x + width/2 && AR.x > nodeComponent.node.x - width/2)
                     {
-                        cc.log('玩家射击了敌人');
-                        // 如果触点的位置在敌人节点的包装盒范围内则调用
-                        nodeComponent.component.beAttacked();
+                        if(AR.y < nodeComponent.node.y + height/2 && AR.y > nodeComponent.node.y - height/2 )
+                        {
+                            nodeComponent.component.beAttacked();
+                        }
                     }
                 }
             }
